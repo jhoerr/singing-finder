@@ -125,7 +125,7 @@ module DateTests=
     
     [<TestCaseSource("parseSingingDatesTestData")>]
     let ``parse singing dates`` year month (str:String) = 
-        parseSingingDates year month str
+        {Day=str; Month=month; Name="singing"} |> parseSingingDates year
 
     // dateWithinRange
 

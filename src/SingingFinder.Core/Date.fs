@@ -2,13 +2,6 @@
 
 open System
 
-// first Sunday
-// first Sunday and Saturday before
-// Saturday before first Sunday
-// Friday and Saturday before first Sunday
-// Jan 1
-// Jan 1 - 3
-
 type Singing = {Month:int; Day:string; Name:string }
 type Days = {Start: DateTime; End: DateTime}
 
@@ -75,17 +68,21 @@ module Date=
 
     // determine if this singing will be held based on its scheduled weekend, and if so on what specific days
     let parseFromRelativeDates year month (str:String) = 
-        let nthSunday = whichWeekend str |> dateOfNthSunday year month
+        let nthSunday = 
+            str 
+            |> whichWeekend 
+            |> dateOfNthSunday year month
+
         match nthSunday with
-        | Some(x) ->    Some(calculateRelativeDates x str)
+        | Some(x) ->    calculateRelativeDates x str |> Some
         | _ ->          None
 
     // determine the singing days from its secription
-    let parseSingingDates year month (str:String) =
-        let mutable day = 0;
-        if Int32.TryParse(str, &day) 
-            then parseFromSpecificDate year month day
-            else parseFromRelativeDates year month str  
+    let parseSingingDates year singing =
+        let mutable specificDay = 0;
+        if Int32.TryParse(singing.Day, &specificDay) 
+            then parseFromSpecificDate year singing.Month specificDay
+            else parseFromRelativeDates year singing.Month singing.Day
 
     // determine if two date ranges overlap
     let dateRangesOverlap range1 range2 =
@@ -93,22 +90,16 @@ module Date=
         | (None, _) -> false
         | (_, None) -> false
         | (Some(x), Some(y)) -> x.Start <= y.End && y.Start <= x.End
+   
 
     // take a list of singings and determine which, if any, fall within a supplied date range.
     let singingsWithinDateRange (days:Days) (singings:Singing list) = 
-        
-        let singingsWithinDateRangeDuringYear year singings = 
-            singings 
-            |> List.map (fun s -> (s, (parseSingingDates year s.Month s.Day)))
-            |> List.filter (fun (s,d) -> dateRangesOverlap (Some(days)) d)
-
         // get a list of singings in each of the starting/ending years chosen by the user.
-        // this accounts for scenarios where the dates span the new year (e.g. 12/1/2017-1/1/2018)
-        let startYearSingings = singings |> singingsWithinDateRangeDuringYear days.Start.Year
-        let endYearSingings = singings |> singingsWithinDateRangeDuringYear days.End.Year
-
+        (singings |> List.map (fun s -> (s, (s |> parseSingingDates days.Start.Year))))
+        @ (singings |> List.map (fun s -> (s, (s |> parseSingingDates days.End.Year))))
+        // filter the list to those with dates that overlap the supplied 'days'
+        |> List.filter (fun (s,d) -> dateRangesOverlap (Some(days)) d)
         // combine the results, sort them by date, and remove duplicates.
-        startYearSingings @ endYearSingings 
         |> List.sortBy (fun (s,Some(d)) -> d.Start)
         |> List.map (fun (s,d) -> s)
         |> List.distinct
