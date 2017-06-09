@@ -177,24 +177,46 @@ module DateTests=
     let newYearsDay =   {Month=1;   Day="1";            Name="new years day"}
     let christmasDay =  {Month=12;  Day="25";           Name="christmas day"}
     let firstSunInJan = {Month=1;   Day="First Sunday"; Name="first sunday in january"}
+    let ohioConvention = {Month=3;   Day="First Sunday and Saturday Before"; Name="first sunday and saturday before in march"}
+    let fifthSundayInJan = {Month=1;   Day="Fifth Sunday"; Name="fifthy sunday in january"}
 
     let singings = 
         [
             newYearsDay; 
             christmasDay; 
-            firstSunInJan
+            firstSunInJan;
+            fifthSundayInJan;
+            ohioConvention
         ]
-
-    let singingsWithinDateRangeTestData =
+    
+    let generalTests =
         [
             TestCaseData("1/1/2017", "1/1/2017").Returns([newYearsDay; firstSunInJan])
             TestCaseData("1/1/2018", "1/1/2018").Returns([newYearsDay])
             TestCaseData("1/1/2018", "1/15/2018").Returns([newYearsDay; firstSunInJan])
             TestCaseData("12/20/2017", "12/31/2017").Returns([christmasDay])
             TestCaseData("12/1/2017", "1/1/2018").Returns([christmasDay; newYearsDay])
-            TestCaseData("1/1/2017", "1/1/2018").Returns([newYearsDay; firstSunInJan; christmasDay])
+            TestCaseData("1/1/2017", "1/1/2018").Returns([newYearsDay; firstSunInJan; fifthSundayInJan; ohioConvention; christmasDay;])
         ]
 
-    [<TestCaseSource("singingsWithinDateRangeTestData")>]
+    let fifthSundayTests =
+        [
+            TestCaseData("1/1/2017", "2/1/2017").Returns([newYearsDay; firstSunInJan; fifthSundayInJan])
+            TestCaseData("1/1/2018", "2/1/2018").Returns([newYearsDay; firstSunInJan; ])
+        ]
+
+    let multiDaySingingBoundaryTests =
+        [
+            TestCaseData("3/3/2017", "3/3/2017").Returns([])
+            TestCaseData("3/3/2017", "3/4/2017").Returns([ohioConvention])
+            TestCaseData("3/4/2017", "3/5/2017").Returns([ohioConvention])
+            TestCaseData("3/5/2017", "3/6/2017").Returns([ohioConvention])
+            TestCaseData("3/3/2017", "3/6/2017").Returns([ohioConvention])
+            TestCaseData("3/6/2017", "3/6/2017").Returns([])
+        ]
+
+    [<TestCaseSource("generalTests")>]
+    [<TestCaseSource("fifthSundayTests")>]
+    [<TestCaseSource("multiDaySingingBoundaryTests")>]
     let ``singings within date range`` (startDay:String) (endDay:String) =
         singings |> singingsWithinDateRange {Start=DateTime.Parse(startDay); End=DateTime.Parse(endDay)}
