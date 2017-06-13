@@ -2,11 +2,6 @@
 @using SingingFinder.Core
 @model IEnumerable<Singing>
 
-@{
-    var today = DateTime.Now.ToString("d");
-    var todayNext = DateTime.Now.AddDays(7.0).ToString("d");
-}
-
 @section styles
 {
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
@@ -21,7 +16,7 @@
     <div class="col-md-12">
         <div class="form-group">
             <label for="daterange">Date Range:</label>
-            <input type="text" class="form-control" id="daterange" name="daterange" value="@today - @todayNext"/>
+            <input type="text" class="form-control" id="daterange" name="daterange"/>
         </div>
     </div>
 </div>
@@ -45,16 +40,22 @@
                 url: '@Url.Action("Map", "Singings")',
                 type: "Get",
                 data: {
-                    start: start,
-                    end: end
+                    start: start.format('L'),
+                    end: end.format('L')
                 },
                 success: function(data) {
                 }
             });
         }
 
-        $(function() {
+        $(function () {
+
+            var now = moment();
+            var oneYear = moment().add(1, 'years').subtract(1, 'days');
+
             $('input[name="daterange"]').daterangepicker({
+                startDate: now,
+                endDate: oneYear,
                     dateLimit: {
                         days: 364
                     },
@@ -62,12 +63,15 @@
                         'Today': [moment(), moment()],
                         'Next 7 Days': [moment(), moment().add(6, 'days')],
                         'Next 30 Days': [moment(), moment().add(29, 'days')]
+                    },
+                    locale: {
+                        format: "MMM DD YYYY"
                     }
                 },
                 function(start, end, label) {
-                    updateMap(start.format('L'), end.format('L'));
+                    updateMap(start, end);
                 });
-            updateMap({});
+            updateMap(now, oneYear);
     });
 
     </script>
