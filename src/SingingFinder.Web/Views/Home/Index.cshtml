@@ -13,7 +13,7 @@
     @*    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="daterange">Date Range:</label>
             <input type="text" class="form-control" id="daterange" name="daterange"/>
@@ -51,11 +51,11 @@
         $(function () {
 
             var now = moment();
-            var oneYear = moment().add(1, 'years').subtract(1, 'days');
+            var oneMonth = moment().add(1, 'month').subtract(1, 'days');
 
             $('input[name="daterange"]').daterangepicker({
                 startDate: now,
-                endDate: oneYear,
+                endDate: oneMonth,
                     dateLimit: {
                         days: 364
                     },
@@ -71,7 +71,7 @@
                 function(start, end, label) {
                     updateMap(start, end);
                 });
-            updateMap(now, oneYear);
+            updateMap(now, oneMonth);
     });
 
     </script>
