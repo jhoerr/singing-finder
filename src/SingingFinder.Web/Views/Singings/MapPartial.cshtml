@@ -1,0 +1,39 @@
+﻿@using Jmelosegui.Mvc.GoogleMap
+@using Microsoft.Azure
+@using SingingFinder.Core
+@using WebGrease.Css.Extensions
+@model IEnumerable<Singing>
+    
+@(Html.GoogleMap()
+      .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))
+      .Name("map")
+      .Height(600)
+      .Center(c => c.UseCurrentPosition())
+      .Markers(factory =>
+          Model.ForEach(marker =>
+              factory.Add()
+                  .Latitude(marker.Latitude)
+                  .Longitude(marker.Longitude)
+                  .Title(marker.Name)
+                  .Window(window =>
+                      window.Add()
+                          .MaxWidth(600)
+                          .DisableAutoPan(false)
+                          .Content(
+                              @<text>
+                                  <div>
+                                      <h1>@marker.Name</h1>
+                                      <div id="bodyContent">
+                                          <p><b>Day:</b> @marker.Day</p>
+                                          <p><b>Location:</b> @marker.Location</p>
+                                          <p><b>Info:</b> @Html.Raw(marker.Info)</p>
+                                          <p><a href="@Html.Raw(marker.LocationUrl)">Get Directions in Google Maps</a></p>
+                                      </div>
+                                  </div>
+                               </text>
+                          )
+                  )
+              )
+      ))
+
+@(Html.GoogleMap().ScriptRegistrar())

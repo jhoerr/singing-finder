@@ -1,52 +1,33 @@
 ﻿@using Jmelosegui.Mvc.GoogleMap
-@using Microsoft.Azure
 @using SingingFinder.Core
-@using WebGrease.Css.Extensions
 @model IEnumerable<Singing>
 
 <div class="jumbotron">
-    <h1>Sacred Harp Singing Finder</h1>
+    <h1>...</h1>
     <p class="lead">Find a singing near you!</p>
 @*    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
 </div>
 <div class="row">
     <div class="col-md-12">
-        @(Html.GoogleMap()
-              .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))
-              .Name("map")
-              .Height(600)
-              .Center(c => c.UseCurrentPosition())
-              .Markers(factory =>
-                  Model.ForEach(marker =>
-                      factory.Add()
-                          .Latitude(marker.Latitude)
-                          .Longitude(marker.Longitude)
-                          .Title(marker.Name)
-                          .Window(window =>
-                              window.Add()
-                                  .MaxWidth(600)
-                                  .DisableAutoPan(false)
-                                  .Content(
-                                      @<text>
-                                          <div>
-                                              <h1>@marker.Name</h1>
-                                              <div id="bodyContent">
-                                                  <p><b>Day:</b> @marker.Day</p>
-                                                  <p><b>Location:</b> @marker.Location</p>
-                                                  <p><b>Info:</b> @Html.Raw(marker.Info)</p>
-                                                  <p><a href="@Html.Raw(marker.LocationUrl)">Get Directions in Google Maps</a></p>
-                                              </div>
-                                          </div>
-                                       </text>
-                                  )
-                          )
-                      )
-              ))
+        <div style="height: 500px; border: solid 1px #cccccc" id="mapContainer">
+        </div>
     </div>
 </div>
 
 @section scripts
 {
-    @(Html.GoogleMap().ScriptRegistrar())
+    @(Html.GoogleMap().ScriptRegistrar(scripts => scripts.Add("jmelosegui.googlemap.js")))
+
+    <script type="text/javascript">
+        $(function() {
+            new $.jmelosegui.GoogleMap('#mapContainer').ajax({
+                url: '@Url.Action("Map", "Singings")',
+                type: "Get",
+                data: { payload: 'from ajax call' },
+                success: function (data) {
+                }
+            });
+        });
+    </script>
 }
        
