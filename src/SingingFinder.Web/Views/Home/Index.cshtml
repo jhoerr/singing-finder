@@ -2,32 +2,71 @@
 @using SingingFinder.Core
 @model IEnumerable<Singing>
 
+@{
+    var today = DateTime.Now.ToString("d");
+    var todayNext = DateTime.Now.AddDays(7.0).ToString("d");
+}
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+}
+
 <div class="jumbotron">
     <h1>...</h1>
     <p class="lead">Find a singing near you!</p>
-@*    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
+    @*    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div style="height: 500px; border: solid 1px #cccccc" id="mapContainer">
+        <div class="form-group">
+            <label for="daterange">Date Range:</label>
+            <input type="text" class="form-control" id="daterange" name="daterange" value="@today - @todayNext"/>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div style="height: 500px; border: solid 1px #cccccc" id="mapContainer"></div>
     </div>
 </div>
 
 @section scripts
 {
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+
     @(Html.GoogleMap().ScriptRegistrar(scripts => scripts.Add("jmelosegui.googlemap.js")))
 
     <script type="text/javascript">
-        $(function() {
+
+        function updateMap(start, end) {
             new $.jmelosegui.GoogleMap('#mapContainer').ajax({
                 url: '@Url.Action("Map", "Singings")',
                 type: "Get",
-                data: { payload: 'from ajax call' },
-                success: function (data) {
+                data: {
+                    start: start,
+                    end: end
+                },
+                success: function(data) {
                 }
             });
-        });
+        }
+
+        $(function() {
+            $('input[name="daterange"]').daterangepicker({
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Next 7 Days': [moment(), moment().add(6, 'days')],
+                        'Next 30 Days': [moment(), moment().add(29, 'days')]
+                    }
+                },
+                function(start, end, label) {
+                    updateMap(start.format('L'), end.format('L'));
+                });
+            updateMap({});
+    });
+
     </script>
 }
        
