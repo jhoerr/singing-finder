@@ -5,6 +5,7 @@ using SingingFinder.Core;
 
 namespace SingingFinder.Web.Controllers
 {
+    [CompressContent]
     public class SingingsController : Controller
     {
         // GET: Singings
