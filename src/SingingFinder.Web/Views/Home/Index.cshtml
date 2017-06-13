@@ -1,24 +1,52 @@
-﻿<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+﻿@using Jmelosegui.Mvc.GoogleMap
+@using Microsoft.Azure
+@using SingingFinder.Core
+@using WebGrease.Css.Extensions
+@model IEnumerable<Singing>
+
+<div class="jumbotron">
+    <h1>Sacred Harp Singing Finder</h1>
+    <p class="lead">Find a singing near you!</p>
+@*    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
 </div>
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-        a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-        is an ideal platform for building RESTful applications on the .NET Framework.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
+    <div class="col-md-12">
+        @(Html.GoogleMap()
+              .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))
+              .Name("map")
+              .Height(600)
+              .Center(c => c.UseCurrentPosition())
+              .Markers(factory =>
+                  Model.ForEach(marker =>
+                      factory.Add()
+                          .Latitude(marker.Latitude)
+                          .Longitude(marker.Longitude)
+                          .Title(marker.Name)
+                          .Window(window =>
+                              window.Add()
+                                  .MaxWidth(600)
+                                  .DisableAutoPan(false)
+                                  .Content(
+                                      @<text>
+                                          <div>
+                                              <h1>@marker.Name</h1>
+                                              <div id="bodyContent">
+                                                  <p><b>Day:</b> @marker.Day</p>
+                                                  <p><b>Location:</b> @marker.Location</p>
+                                                  <p><b>Info:</b> @Html.Raw(marker.Info)</p>
+                                                  <p><a href="@Html.Raw(marker.LocationUrl)">View in Google Maps</a></p>
+                                              </div>
+                                          </div>
+                                       </text>
+                                  )
+                          )
+                      )
+              ))
     </div>
 </div>
+
+@section scripts
+{
+    @(Html.GoogleMap().ScriptRegistrar())
+}
+       

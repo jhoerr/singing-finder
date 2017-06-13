@@ -9,6 +9,8 @@ module DateTests=
 
     open Date
 
+    let defaultSinging = {Month=1; Day="1"; Name=""; Location=""; Info=""; Latitude=0.0; Longitude=0.0; LocationUrl=""}
+
     // firstSunday
 
     [<Test>]
@@ -125,7 +127,7 @@ module DateTests=
     
     [<TestCaseSource("parseSingingDatesTestData")>]
     let ``parse singing dates`` year month (str:String) = 
-        {Day=str; Month=month; Name="singing"} |> parseSingingDates year
+        {defaultSinging with Day=str; Month=month; Name="singing"} |> parseSingingDates year
 
     // dateWithinRange
 
@@ -173,12 +175,11 @@ module DateTests=
         test <@ dateRangesOverlap (Some({Start=DateTime(2017,1,1); End=DateTime(2017,1,3)})) None = false @>
 
     // singingsWithinDateRange
-
-    let newYearsDay =   {Month=1;   Day="1";            Name="new years day"}
-    let christmasDay =  {Month=12;  Day="25";           Name="christmas day"}
-    let firstSunInJan = {Month=1;   Day="First Sunday"; Name="first sunday in january"}
-    let ohioConvention = {Month=3;   Day="First Sunday and Saturday Before"; Name="first sunday and saturday before in march"}
-    let fifthSundayInJan = {Month=1;   Day="Fifth Sunday"; Name="fifthy sunday in january"}
+    let newYearsDay =   {defaultSinging with Month=1;   Day="1";            Name="new years day"}
+    let christmasDay =  {defaultSinging with Month=12;  Day="25";           Name="christmas day"}
+    let firstSunInJan = {defaultSinging with Month=1;   Day="First Sunday"; Name="first sunday in january"}
+    let ohioConvention = {defaultSinging with Month=3;   Day="First Sunday and Saturday Before"; Name="first sunday and saturday before in march"}
+    let fifthSundayInJan = {defaultSinging with Month=1;   Day="Fifth Sunday"; Name="fifthy sunday in january"}
 
     let singings = 
         [

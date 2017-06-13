@@ -2,7 +2,7 @@
 
 open System
 
-type Singing = {Month:int; Day:string; Name:string }
+type Singing = {Month:int; Day:string; Name:string; Location: string; Latitude: float; Longitude: float; Info: string; LocationUrl: string }
 type Days = {Start: DateTime; End: DateTime}
 
 type SingingDays = 
