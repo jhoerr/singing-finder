@@ -55,6 +55,9 @@
 
         $(function() {
             $('input[name="daterange"]').daterangepicker({
+                    dateLimit: {
+                        days: 364
+                    },
                     ranges: {
                         'Today': [moment(), moment()],
                         'Next 7 Days': [moment(), moment().add(6, 'days')],

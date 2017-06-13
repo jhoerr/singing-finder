@@ -2,14 +2,45 @@
 
 open System
 
-type Singing = {Month:int; Day:string; Name:string; Location: string; Latitude: float; Longitude: float; Info: string; LocationUrl: string }
-type Days = {Start: DateTime; End: DateTime}
+type Month =
+    | January=1
+    | February=2
+    | March=3
+    | April=4
+    | May=5
+    | June=6
+    | July=7
+    | August=8
+    | September=9
+    | October=10
+    | November=11
+    | December=12
+
+type Singing = 
+  { Month:Month; 
+    Day:string; 
+    Name:string; 
+    Location: string; 
+    Latitude: float; 
+    Longitude: float; 
+    Info: string; 
+    LocationUrl: string }
+
+type Days = 
+  { Start: DateTime; 
+    End: DateTime }
+
+type Event =
+  { Singing: Singing;
+    Days: Days }
 
 type SingingDays = 
     | Sunday
     | Saturday
     | SaturdayAndSunday
     | FridayAndSaturday
+
+
 
 module Date=
 
@@ -22,7 +53,7 @@ module Date=
             | DayOfWeek.Sunday  -> date
             | _                 -> firstSundayIn' (date.AddDays(1.0))
 
-        firstSundayIn' (DateTime(year, month, 1))
+        firstSundayIn' (DateTime(year, int month, 1))
 
     // Find the date of the Nth (e.g. first, second, etc) Sunday in a given month and year.
     // Ex 1: The first (n=1) Sunday in January 2017 is 1/1/2017
@@ -32,7 +63,7 @@ module Date=
         let firstSunday = findFirstSundayInMonth year month
         let weekOffset = weekend - 1
         let nthSunday' = firstSunday.AddDays(7.0 * (float)(weekOffset))
-        if nthSunday'.Month = month then Some(nthSunday') else None
+        if nthSunday'.Month = int month then Some(nthSunday') else None
 
     // parse the singing description to determine which days of the week the singing will be held on
     let whichSingingDays (str:String) = 
@@ -55,7 +86,7 @@ module Date=
 
     // sometimes singings are on a specific date (January 1st, December 26th, etc.)
     let parseFromSpecificDate year month day =
-        let date = (sprintf "%d/%d/%d" month day year) |> DateTime.Parse
+        let date = (sprintf "%d/%d/%d" (int month) day year) |> DateTime.Parse
         Some({Start=date; End=date})
     
     // figure the start/end dates of a singing based on the days of the week it falls on.
@@ -83,23 +114,24 @@ module Date=
         if Int32.TryParse(singing.Day, &specificDay) 
             then parseFromSpecificDate year singing.Month specificDay
             else parseFromRelativeDates year singing.Month singing.Day
+    
+    let determineSingingDates year singing =
+        let days = parseSingingDates year singing
+        match days with
+        | Some(x) -> Some({ Singing = singing; Days = x })
+        | None    -> None
 
     // determine if two date ranges overlap
     let dateRangesOverlap range1 range2 =
-        match (range1, range2) with
-        | (None, _) -> false
-        | (_, None) -> false
-        | (Some(x), Some(y)) -> x.Start <= y.End && y.Start <= x.End
-   
+        range1.Start <= range2.End && range2.Start <= range1.End
 
     // take a list of singings and determine which, if any, fall within a supplied date range.
     let singingsWithinDateRange (days:Days) (singings:Singing list) = 
         // get a list of singings in each of the starting/ending years chosen by the user.
-        (singings |> List.map (fun s -> (s, (s |> parseSingingDates days.Start.Year))))
-        @ (singings |> List.map (fun s -> (s, (s |> parseSingingDates days.End.Year))))
-        // filter the list to those with dates that overlap the supplied 'days'
-        |> List.filter (fun (s,d) -> dateRangesOverlap (Some(days)) d)
-        // combine the results, sort them by date, and remove duplicates.
-        |> List.sortBy (fun (s,Some(d)) -> d.Start)
-        |> List.map (fun (s,d) -> s)
+        (singings |> List.map (fun s -> determineSingingDates days.Start.Year s))
+        @ (singings |> List.map (fun s -> determineSingingDates days.End.Year s))
+        |> List.filter (fun e -> e.IsSome)
+        |> List.map (fun e -> e.Value)
+        |> List.filter (fun e -> dateRangesOverlap days e.Days)
+        |> List.sortBy (fun e -> e.Days.Start)
         |> List.distinct

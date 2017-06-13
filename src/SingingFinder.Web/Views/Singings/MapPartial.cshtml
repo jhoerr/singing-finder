@@ -2,7 +2,7 @@
 @using Microsoft.Azure
 @using SingingFinder.Core
 @using WebGrease.Css.Extensions
-@model IEnumerable<Singing>
+@model IEnumerable<Event>
     
 @(Html.GoogleMap()
       .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))
@@ -12,9 +12,9 @@
       .Markers(factory =>
           Model.ForEach(marker =>
               factory.Add()
-                  .Latitude(marker.Latitude)
-                  .Longitude(marker.Longitude)
-                  .Title(marker.Name)
+                  .Latitude(marker.Singing.Latitude)
+                  .Longitude(marker.Singing.Longitude)
+                  .Title(marker.Singing.Name)
                   .Window(window =>
                       window.Add()
                           .MaxWidth(600)
@@ -22,12 +22,20 @@
                           .Content(
                               @<text>
                                   <div>
-                                      <h1>@marker.Name</h1>
+                                      <h1>@marker.Singing.Name</h1>
                                       <div id="bodyContent">
-                                          <p><b>Day:</b> @marker.Day</p>
-                                          <p><b>Location:</b> @marker.Location</p>
-                                          <p><b>Info:</b> @Html.Raw(marker.Info)</p>
-                                          <p><a href="@Html.Raw(marker.LocationUrl)">Get Directions in Google Maps</a></p>
+                                          @if (marker.Days.Start == marker.Days.End)
+                                          {
+                                              <p><b>@marker.Days.Start.ToString("ddd, MMM dd yyyy")</b> (@marker.Singing.Day in @marker.Singing.Month).</p>
+                                          }
+                                          else
+                                          {
+                                              <p><b>@marker.Days.Start.ToString("ddd, MMM dd yyyy") - @marker.Days.End.ToString("ddd, MMM dd yyyy")</b> (@marker.Singing.Day in @marker.Singing.Month).</p>
+                                          }
+                                          <p><b>Info:</b> @Html.Raw(marker.Singing.Info)</p>
+                                          <p><b>Location:</b> @marker.Singing.Location</p>
+                                          <p><a href="@Html.Raw(marker.Singing.LocationUrl)">Get Directions in Google Maps</a>
+                                          </p>
                                       </div>
                                   </div>
                                </text>
