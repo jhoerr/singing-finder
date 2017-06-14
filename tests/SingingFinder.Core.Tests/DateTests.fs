@@ -9,7 +9,7 @@ module DateTests=
 
     open Date
 
-    let defaultSinging = {Month=Month.January; Day="1"; Name=""; Location=""; Info=""; Latitude=0.0; Longitude=0.0; LocationUrl=""}
+    let defaultSinging = {Month=Month.January; Day="1"; Name=""; Location=""; Info=""; Latitude=0.0; Longitude=0.0; LocationUrl=""; Book=Book.Denson}
 
     // firstSunday
 

@@ -14,6 +14,19 @@ type Month =
     | November=11
     | December=12
 
+[<System.FlagsAttribute>]
+type Book =
+    | Denson            =1
+    | Cooper            =2
+    | ShenandoahHarmony =4
+    | GeorgianHarmony   =8
+    | ChristianHarmony  =16
+    | MissouriHarmony   =32
+    | SouthernHarmony   =64
+    | EclecticHarmony   =128
+    | JLWhite           =256
+    | NewCompositions   =512
+
 type Singing = 
   { Month:Month; 
     Day:string; 
