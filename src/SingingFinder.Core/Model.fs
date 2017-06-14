@@ -26,6 +26,9 @@ type Book =
     | EclecticHarmony   =128
     | JLWhite           =256
     | NewCompositions   =512
+    | ColoredSacredHarp =1024
+    | SocialHarp        =2048
+    | AmericanVocalist  =4096
 
 type Singing = 
   { Month:Month; 
