@@ -30,7 +30,7 @@
                                       }
                                       else
                                       {
-                                        <h2><a href="@marker.Singing.SingingUrl">@marker.Singing.Name</a></h2>
+                                        <h2><a href="@marker.Singing.SingingUrl" target="_blank">@marker.Singing.Name</a></h2>
                                       }
                                       <div id="bodyContent">
                                           @if (marker.Days.Start == marker.Days.End)
@@ -43,7 +43,7 @@
                                           }
                                           <p><b>Info:</b> @Html.Raw(marker.Singing.Info)</p>
                                           <p><b>Location:</b> @marker.Singing.Location</p>
-                                          <p><a href="@Html.Raw(marker.Singing.LocationUrl)">Get Directions in Google Maps</a>
+                                          <p><a href="@Html.Raw(marker.Singing.LocationUrl)" target="_blank">Get Directions in Google Maps</a>
                                           </p>
                                       </div>
                                   </div>
