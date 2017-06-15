@@ -4,6 +4,8 @@
 @using WebGrease.Css.Extensions
 @model IEnumerable<Event>
     
+<p>@(Model.Count()) singing(s) found in this date range.</p>
+
 @(Html.GoogleMap()
       .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))
       .Name("map")
