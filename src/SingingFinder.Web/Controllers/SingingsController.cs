@@ -15,6 +15,9 @@ namespace SingingFinder.Web.Controllers
         public ActionResult Map(DateTime? start = null, DateTime? end = null)
             => PartialView("MapPartial", Singings(start, end));
 
+        public ActionResult Annual()
+            => View(Singings());
+
         private IEnumerable<Event> Singings(DateTime? start = null, DateTime? end = null) 
             => SingingRepository.singingsInRange(ResolveStart(start), ResolveEnd(end), 0);
 
