@@ -37,7 +37,8 @@ type Singing =
     Location: string; 
     Latitude: float; 
     Longitude: float; 
-    Info: string; 
+    Info: string;
+    SingingUrl: string;
     LocationUrl: string;
     Book: Book }
 

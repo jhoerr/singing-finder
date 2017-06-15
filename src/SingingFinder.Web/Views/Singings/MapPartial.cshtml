@@ -22,7 +22,14 @@
                           .Content(
                               @<text>
                                   <div>
-                                      <h1>@marker.Singing.Name</h1>
+                                      @if (string.IsNullOrWhiteSpace(marker.Singing.SingingUrl))
+                                      {
+                                          <h2>@marker.Singing.Name</h2>
+                                      }
+                                      else
+                                      {
+                                        <h2><a href="@marker.Singing.SingingUrl">@marker.Singing.Name</a></h2>
+                                      }
                                       <div id="bodyContent">
                                           @if (marker.Days.Start == marker.Days.End)
                                           {
