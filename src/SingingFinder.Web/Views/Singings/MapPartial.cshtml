@@ -8,12 +8,15 @@
 
     var cookie = Request.Cookies["myMapCookie"];
     var value = cookie == null ? "" : cookie.Value ?? "";
-    var parts = value.Split('_');
     double lat=0.0, lng = 0.0;
     int zoom = 6; // default zoom
-    double.TryParse(parts[0], out lat);
-    double.TryParse(parts[1], out lng);
-    int.TryParse(parts[2], out zoom);
+    var parts = value.Split('_');
+    if (parts.Length == 3)
+    {
+        double.TryParse(parts[0], out lat);
+        double.TryParse(parts[1], out lng);
+        int.TryParse(parts[2], out zoom);
+    }
 }
 
 <p>@(Model.Count()) singing(s) found in this date range.</p>
