@@ -3,14 +3,40 @@
 @using SingingFinder.Core
 @using WebGrease.Css.Extensions
 @model IEnumerable<Event>
-    
+
+@{
+
+    var cookie = Request.Cookies["myMapCookie"];
+    var value = cookie == null ? "" : cookie.Value ?? "";
+    var parts = value.Split('_');
+    double lat=0.0, lng = 0.0;
+    int zoom = 6; // default zoom
+    double.TryParse(parts[0], out lat);
+    double.TryParse(parts[1], out lng);
+    int.TryParse(parts[2], out zoom);
+}
+
 <p>@(Model.Count()) singing(s) found in this date range.</p>
 
 @(Html.GoogleMap()
       .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))
       .Name("map")
       .Height(600)
-      .Center(c => c.UseCurrentPosition())
+      .Zoom(zoom)
+      .Center(center =>
+      {
+          if (lat == 0.0 && lng == 0.0)
+          {
+              center.UseCurrentPosition();
+          }
+          else
+          {
+              center.Latitude(lat).Longitude(lng);
+          }
+      })
+      .ClientEvents(events => events
+        .OnMapDragEnd("saveMapState")
+        .OnZoomChanged("saveMapState"))
       .Markers(factory =>
           Model.ForEach(marker =>
               factory.Add()

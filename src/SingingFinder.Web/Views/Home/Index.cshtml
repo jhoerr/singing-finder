@@ -31,6 +31,21 @@
     @(Html.GoogleMap().ScriptRegistrar(scripts => scripts.Add("jmelosegui.googlemap.js")))
 
     <script type="text/javascript">
+        function saveMapState(args) {
+            var mapZoom = args.map.getZoom();
+            var mapCentre = args.map.getCenter();
+            var mapLat = mapCentre.lat();
+            var mapLng = mapCentre.lng();
+            var cookiestring = mapLat + "_" + mapLng + "_" + mapZoom;
+            setCookie("myMapCookie", cookiestring, 30);
+        }
+
+        function setCookie(c_name, value, exdays) {
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + exdays);
+            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+            document.cookie = c_name + "=" + c_value;
+        }
 
         function updateMap(start, end) {
             new $.jmelosegui.GoogleMap('#mapContainer').ajax({
