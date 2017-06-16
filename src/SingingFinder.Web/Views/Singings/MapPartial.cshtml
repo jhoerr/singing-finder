@@ -70,6 +70,7 @@
                                           {
                                               <p><b>@marker.Days.Start.ToString("ddd, MMM dd yyyy") - @marker.Days.End.ToString("ddd, MMM dd yyyy")</b> (@marker.Singing.Day in @marker.Singing.Month).</p>
                                           }
+                                          <p><b>Book:</b> @marker.Singing.Book</p>
                                           <p><b>Info:</b> @Html.Raw(marker.Singing.Info)</p>
                                           <p><b>Location:</b> @marker.Singing.Location</p>
                                           <p><a href="@Html.Raw(marker.Singing.LocationUrl)" target="_blank">Get Directions in Google Maps</a>

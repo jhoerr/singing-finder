@@ -38,5 +38,5 @@ module SingingRepositoryTests=
     [<Category "integration">]
     let ``fetch all singings``()=
         singings()
-        |> List.iter (fun s -> printf "%s\n" (s.Name))
+        |> List.iter (fun s -> printf "%s: %A\n" s.Name s.Book)
 

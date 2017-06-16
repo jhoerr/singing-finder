@@ -16,19 +16,21 @@ type Month =
 
 [<System.FlagsAttribute>]
 type Book =
-    | Denson            =1
-    | Cooper            =2
-    | ShenandoahHarmony =4
-    | GeorgianHarmony   =8
-    | ChristianHarmony  =16
-    | MissouriHarmony   =32
-    | SouthernHarmony   =64
-    | EclecticHarmony   =128
-    | JLWhite           =256
-    | NewCompositions   =512
-    | ColoredSacredHarp =1024
-    | SocialHarp        =2048
-    | AmericanVocalist  =4096
+    | ``Denson``                =1
+    | ``Cooper``                =2
+    | ``Shenandoah Harmony``    =4
+    | ``Georgian Harmony``      =8
+    | ``Christian Harmony``     =16
+    | ``Missouri Harmony``      =32
+    | ``Southern Harmony``      =64
+    | ``Eclectic Harmony``      =128
+    | ``JL White``              =256
+    | ``New Compositions``      =512
+    | ``Colored Sacred Harp``   =1024
+    | ``Social Harp``           =2048
+    | ``American Vocalist``     =4096
+    | ``Harmonia Sacra``        =8192
+
 
 type Singing = 
   { Month:Month; 
@@ -55,4 +57,3 @@ type SingingDays =
     | Saturday
     | SaturdayAndSunday
     | FridayAndSaturday
-
