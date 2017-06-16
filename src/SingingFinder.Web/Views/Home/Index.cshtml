@@ -63,13 +63,13 @@
         $(function () {
 
             var now = moment();
-            var oneMonth = moment().add(1, 'month').subtract(1, 'days');
+            var oneYearFromNow = moment().add(1, 'year').subtract(1, 'days');
 
             $('input[name="daterange"]').daterangepicker({
                 startDate: now,
-                endDate: oneMonth,
+                endDate: oneYearFromNow,
                     dateLimit: {
-                        days: 364
+                        days: 365
                     },
                     ranges: {
                         'Today': [moment(), moment()],
@@ -83,7 +83,7 @@
                 function(start, end, label) {
                     updateMap(start, end);
                 });
-            updateMap(now, oneMonth);
+            updateMap(now, oneYearFromNow);
     });
 
     </script>
