@@ -56,6 +56,7 @@
     <Content Include="app.config" />
     <Compile Include="Model.fs" />
     <Compile Include="Date.fs" />
+    <Compile Include="SingingCache.fs" />
     <Compile Include="SingingRepository.fs" />
     <None Include="singings.csv" />
   </ItemGroup>
