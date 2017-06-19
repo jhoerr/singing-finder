@@ -2,7 +2,7 @@
 @using Microsoft.Azure
 @using SingingFinder.Core
 @using WebGrease.Css.Extensions
-@model IEnumerable<Event>
+@model SingingFinder.Web.Models.SingingsViewModel
 
 @{
 
@@ -17,9 +17,15 @@
         double.TryParse(parts[1], out lng);
         int.TryParse(parts[2], out zoom);
     }
+
+    var count = Model.Events.Count();
+    var bookClause = Model.Book == Book.All ? string.Empty : Model.Book + " ";
+    var isAreClause = count == 1 ? "is" : "are";
+    var countClause = count == 0 ? "no" : count.ToString();
+    var singingClause = count == 1 ? "singing" : "singings";
 }
 
-<p>@(Model.Count()) singing(s) found in this date range.</p>
+<p>There @(isAreClause) @(countClause) @(bookClause)@(singingClause) between @Model.Start.ToString("ddd, MMM dd yyyy") and @Model.End.ToString("ddd, MMM dd yyyy").</p>
 
 @(Html.GoogleMap()
       .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))
@@ -41,7 +47,7 @@
         .OnMapDragEnd("saveMapState")
         .OnZoomChanged("saveMapState"))
       .Markers(factory =>
-          Model.ForEach(marker =>
+          Model.Events.ForEach(marker =>
               factory.Add()
                   .Latitude(marker.Singing.Latitude)
                   .Longitude(marker.Singing.Longitude)

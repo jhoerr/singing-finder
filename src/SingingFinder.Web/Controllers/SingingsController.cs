@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using SingingFinder.Core;
+using SingingFinder.Web.Models;
 
 namespace SingingFinder.Web.Controllers
 {
@@ -9,17 +10,17 @@ namespace SingingFinder.Web.Controllers
     public class SingingsController : Controller
     {
         // GET: Singings
-        public ActionResult Index(DateTime? start = null, DateTime? end = null) 
-            => Json(Singings(), JsonRequestBehavior.AllowGet);
+        public ActionResult Index(DateTime? start = null, DateTime? end = null, Book book = Book.All) 
+            => Json(Singings(start, end, book), JsonRequestBehavior.AllowGet);
 
-        public ActionResult Map(DateTime? start = null, DateTime? end = null)
-            => PartialView("MapPartial", Singings(start, end));
+        public ActionResult Map(DateTime? start = null, DateTime? end = null, Book book = Book.All)
+            => PartialView("MapPartial", new SingingsViewModel(Singings(start, end, book), ResolveStart(start), ResolveEnd(end), book));
 
         public ActionResult Annual()
             => View(Singings());
 
-        private IEnumerable<Event> Singings(DateTime? start = null, DateTime? end = null) 
-            => SingingRepository.singingsInRange(ResolveStart(start), ResolveEnd(end), 0);
+        private IEnumerable<Event> Singings(DateTime? start = null, DateTime? end = null, Book book = Book.All) 
+            => SingingRepository.singingsInRange(ResolveStart(start), ResolveEnd(end), book, 0);
 
         private static DateTime ResolveStart(DateTime? start)
             => start ?? DateTime.Today;

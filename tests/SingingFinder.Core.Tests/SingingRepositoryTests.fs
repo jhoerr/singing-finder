@@ -5,7 +5,6 @@ module SingingCacheTests=
     open Swensen.Unquote
     open NUnit.Framework
     open SingingFinder.Core
-    open SingingCache
     open SingingRepository
 
     [<Test>]
@@ -38,5 +37,5 @@ module SingingRepositoryTests=
     [<Category "integration">]
     let ``fetch all singings``()=
         singings()
-        |> List.iter (fun s -> printf "%s: %A\n" s.Name s.Book)
+        |> List.iter (fun s -> printfn "%s (%A)" s.Name s.Book)
 

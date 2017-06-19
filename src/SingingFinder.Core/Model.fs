@@ -16,6 +16,7 @@ type Month =
 
 [<System.FlagsAttribute>]
 type Book =
+    | ``All``                   =0
     | ``Denson``                =1
     | ``Cooper``                =2
     | ``Shenandoah Harmony``    =4
