@@ -8,8 +8,9 @@
 
     var cookie = Request.Cookies["myMapCookie"];
     var value = cookie == null ? "" : cookie.Value ?? "";
-    double lat=0.0, lng = 0.0;
-    int zoom = 6; // default zoom
+    double lat = 42.2072;
+    double lng = -49.5601;
+    int zoom = 3; // default zoom
     var parts = value.Split('_');
     if (parts.Length == 3)
     {
@@ -32,17 +33,7 @@
       .Name("map")
       .Height(600)
       .Zoom(zoom)
-      .Center(center =>
-      {
-          if (lat == 0.0 && lng == 0.0)
-          {
-              center.UseCurrentPosition();
-          }
-          else
-          {
-              center.Latitude(lat).Longitude(lng);
-          }
-      })
+      .Center(center => center.Latitude(lat).Longitude(lng))
       .ClientEvents(events => events
         .OnMapDragEnd("saveMapState")
         .OnZoomChanged("saveMapState"))
