@@ -20,7 +20,6 @@
         <div class="form-group">
             <label for="book">Book:</label>
             <select class="form-control" id="book" name="book">
-                <option value="All">Select...</option>
             @foreach (var book in Enum.GetValues(typeof(Book)).Cast<Book>())
             {
                 <option value="@book">@book</option>
