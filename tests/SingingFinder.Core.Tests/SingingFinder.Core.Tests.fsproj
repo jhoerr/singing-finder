@@ -14,6 +14,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>SingingFinder.Core.Tests</Name>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,8 +58,12 @@
     <Content Include="app.config" />
     <Compile Include="DateTests.fs" />
     <Compile Include="SingingRepositoryTests.fs" />
+    <Compile Include="ParserTests.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FsLexYacc.Runtime">
+      <HintPath>..\..\packages\FsLexYacc.Runtime.7.0.5\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10\FsLexYacc.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="FsUnit.NUnit">
       <HintPath>..\..\packages\FsUnit.3.0.0\lib\net45\FsUnit.NUnit.dll</HintPath>
       <Private>True</Private>
@@ -84,6 +90,13 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <Import Project="..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets" Condition="Exists('..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,0 +1,49 @@
+﻿%{   
+open System
+open SingingFinder.Core
+%} 
+
+%start start   
+%token <System.Int32> INT
+%token MONDAY TUESDAY WEDNESDAY THURSDAY FRIDAY SATURDAY SUNDAY FIRST SECOND THIRD FOURTH FIFTH LAST EVERY AND BEFORE EOF
+%type <SingingFinder.Core.SingingDay> start   
+  
+%%   
+  
+start:	SingingDay { $1 }
+
+Day: 
+| MONDAY	{ DayOfWeek.Monday }
+| TUESDAY	{ DayOfWeek.Tuesday }
+| WEDNESDAY	{ DayOfWeek.Wednesday }
+| THURSDAY	{ DayOfWeek.Thursday }
+| FRIDAY	{ DayOfWeek.Friday }
+| SATURDAY	{ DayOfWeek.Saturday }
+| SUNDAY	{ DayOfWeek.Sunday }
+
+Cardinality: 
+| FIRST		{ First }
+| SECOND	{ Second }
+| THIRD		{ Third }
+| FOURTH	{ Fourth }
+| FIFTH		{ Fifth }
+| LAST		{ Last }
+
+DayList: 
+| Day				{ [$1] }
+| DayList AND Day	{ $3 :: $1 }
+
+CardinalityList: 
+| Cardinality						{ [$1] }
+| CardinalityList AND Cardinality	{ $3 :: $1 }
+
+AndDaysBefore:
+|						{ None }
+| AND DayList BEFORE	{ Some($2) }
+
+SingingDay:	
+| INT										{ DayOfMonth ($1) }
+| EVERY Day									{ Every ($2) }
+| CardinalityList Day						{ Regularly (List.rev($1),$2) }
+| CardinalityList Day AND DayList BEFORE	{ OnOrBefore (List.rev($1),$2,List.rev($4) @ [$2]) }
+| DayList BEFORE CardinalityList Day		{ OnOrBefore (List.rev($3),$4,List.rev($1)) }

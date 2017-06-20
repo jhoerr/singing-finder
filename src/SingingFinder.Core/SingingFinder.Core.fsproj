@@ -14,6 +14,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>SingingFinder</Name>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,19 +52,34 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
+  <Import Project="..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets" Condition="Exists('..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets')" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
+    <None Include="singings.csv" />
+    <Compile Include="SingingDay.fs" />
+    <None Include="Parser.fsy" />
+    <FsYacc Include="Parser.fsy">
+      <OtherFlags>--module Parser -v</OtherFlags>
+    </FsYacc>
+    <Compile Include="Parser.fs" />
+    <None Include="Lexer.fsl" />
+    <FsLex Include="Lexer.fsl">
+      <OtherFlags>--unicode</OtherFlags>
+    </FsLex>
+    <Compile Include="Lexer.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="Date.fs" />
     <Compile Include="SingingCache.fs" />
     <Compile Include="SingingRepository.fs" />
-    <None Include="singings.csv" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
       <HintPath>..\..\packages\FSharp.Data.2.3.3\lib\net40\FSharp.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="FsLexYacc.Runtime">
+      <HintPath>..\..\packages\FsLexYacc.Runtime.7.0.5\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10\FsLexYacc.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -74,6 +91,12 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
