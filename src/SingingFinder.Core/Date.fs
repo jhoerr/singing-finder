@@ -6,14 +6,15 @@ module Date=
     open System
     open Microsoft.FSharp.Text.Lexing
 
+    // Find the first instance of a day of the week falling on or before the given date
     let rec findNearestDayOnOrBefore (start:DateTime) target =
         if start.DayOfWeek = target 
         then start 
         else findNearestDayOnOrBefore (start.AddDays(-1.0)) target  
 
-    // Find the date of the first Sunday in a given month and year
+    // Find the date of the first instance of a particular day of the week in a given month and year
     // Ex 1: The first Sunday in January 2017 is 1/1/2017
-    // Ex 2: The first Sunday in January 2018 is 1/7/2017
+    // Ex 2: The first Tuesday in February 2018 is 2/6/2018
     let rec firstDayOfWeekInMonth year month dayOfWeek = 
         let rec firstDayOfWeekIn' (date:DateTime) = 
             if date.DayOfWeek = dayOfWeek
@@ -22,19 +23,22 @@ module Date=
 
         firstDayOfWeekIn' (DateTime(year, month, 1))
 
+    // Find the date of the Nth instance of a particular day of the week in a given month and year
+    // Ex 1: The fourth Sunday in January 2017 is 1/22/2017
+    // Ex 2: The second Tuesday in February 2018 is 2/13/2018
+    // Account for the fact that months can sometimes have an e.g. "fifth" Sunday, and sometimes not.
     let nthDayOfWeekInMonth year month dayOfWeek offset = 
         let firstInstance = dayOfWeek |> firstDayOfWeekInMonth year month
         let nthInstance = firstInstance.AddDays(7.0 * (float)(offset - 1))
         if nthInstance.Month = int month then Some(nthInstance) else None
-        
+
+    // Find the date of the last instance of a particular day of the week in a given month and year
+    // Ex 1: The last Sunday in January 2017 is 1/29/2017
+    // Ex 2: The last Tuesday in February 2018 is 2/27/2018
     let lastDayOfWeekInMonth year month dayOfWeek =
         let lastDayOfMonth = DateTime(year, month, 1).AddMonths(1).AddDays(-1.0)
         Some(findNearestDayOnOrBefore lastDayOfMonth dayOfWeek)
 
-    // Find the date of the Nth (e.g. first, second, etc) Sunday in a given month and year.
-    // Ex 1: The first (n=1) Sunday in January 2017 is 1/1/2017
-    // Ex 2: The second (n=2) Sunday in January 2017 is 1/8/2017
-    // Account for the fact that months can sometimes have an e.g. "fifth" Sunday, and sometimes not.
     let resolveDate year month dayOfWeek cardinality =
         match cardinality with
         | First     -> nthDayOfWeekInMonth  year month dayOfWeek 1
@@ -44,10 +48,12 @@ module Date=
         | Fifth     -> nthDayOfWeekInMonth  year month dayOfWeek 5
         | Last      -> lastDayOfWeekInMonth year month dayOfWeek
 
+    // parse the singing day description into a domain SingingDay
     let parse (singing:string) =
         let lexbuf = singing.ToLowerInvariant() |> LexBuffer<char>.FromString
         Parser.start Lexer.read lexbuf
 
+    // resolve a specific calendar day
     let dayOfMonth year month day =
         match month with 
         | 0 -> failwith "Specific month is required"
@@ -55,6 +61,8 @@ module Date=
             let d = DateTime(year, int m, day)
             [ {Start=d; End=d} ]
     
+    // find all the dates in a month falling in specific cardinal positions (i.e. second, fourth, last) 
+    //   for the given year, month(s) and days of the week.
     let onOrBefore year months cardinalities referenceDay singingDays =
         months 
         |> List.collect (fun m -> 
@@ -74,16 +82,16 @@ module Date=
         [ First; Second; Third; Fourth; Fifth ]
         |> regular year months dayOfWeek
  
-    // determine the singing days from its secription
+    // determine the singing days from its description
     let parseSingingDates year singing =
         let month = int singing.Month
         let months = 
             match singing.Month with
             | Month.All -> [ 1 .. 12]
-            | _         -> [ int singing.Month ]
+            | _         -> [ month ]
 
         match parse singing.Day with 
-        | DayOfMonth(day)       -> dayOfMonth year (int singing.Month) day
+        | DayOfMonth(day)       -> dayOfMonth year month day
         | Every(day)            -> every year months day
         | Regular (cards, day)  -> regular year months day cards
         | OnOrBefore(cards, refDay, days) -> onOrBefore year months cards refDay days
@@ -92,6 +100,7 @@ module Date=
     let dateRangesOverlap range1 range2 =
         range1.Start <= range2.End && range2.Start <= range1.End
 
+    // determine the upcoming dates for a given singing that fall between the supplied date range.
     let determineSingingDates days singing =
         let startingYearDays = parseSingingDates days.Start.Year singing
         let endingYearDays = parseSingingDates days.End.Year singing

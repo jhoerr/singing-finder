@@ -24,6 +24,7 @@ module SingingCache=
         Longitude=r.Longitude;
         LocationUrl=r.LocationUrl; }
 
+    // fetch singing records from the data source, convert them to domain records, and cache the result.
     let fetchRows() =
         let rows = 
             SingingRecord
@@ -35,6 +36,7 @@ module SingingCache=
         cache.Set (cacheKey,rows)
         rows
 
+    // get singing records from the cache, or fetch/cache them from the data source
     let getRecords() = 
         match cache.TryRetrieve cacheKey with 
         | Some(rows)    -> rows
