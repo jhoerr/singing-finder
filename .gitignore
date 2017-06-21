@@ -288,6 +288,4 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 src/SingingFinder.Core/Parser.fsi
-src/SingingFinder.Core/Parser.fs
-src/SingingFinder.Core/Lexer.fs
 src/SingingFinder.Core/Parser.fsyacc.output
