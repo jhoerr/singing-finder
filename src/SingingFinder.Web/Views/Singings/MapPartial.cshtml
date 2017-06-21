@@ -59,14 +59,21 @@
                                         <h2><a href="@marker.Singing.SingingUrl" target="_blank">@marker.Singing.Name</a></h2>
                                       }
                                       <div id="bodyContent">
-                                          @if (marker.Days.Start == marker.Days.End)
-                                          {
-                                              <p><b>@marker.Days.Start.ToString("ddd, MMM dd yyyy")</b> (@marker.Singing.Day in @marker.Singing.Month).</p>
-                                          }
-                                          else
-                                          {
-                                              <p><b>@marker.Days.Start.ToString("ddd, MMM dd yyyy") - @marker.Days.End.ToString("ddd, MMM dd yyyy")</b> (@marker.Singing.Day in @marker.Singing.Month).</p>
-                                          }
+                                          <p><em>@marker.Singing.Day</em></p>
+                                          <p>
+                                              @foreach (var days in marker.Days.Take(7))
+                                              {
+                                                  if (days.Start == days.End)
+                                                  {
+                                                      <b>@days.Start.ToString("ddd, MMM dd yyyy")</b><br/>
+                                                  }
+                                                  else
+                                                  {
+                                                      <b>@days.Start.ToString("ddd, MMM dd yyyy") - @days.End.ToString("ddd, MMM dd yyyy")</b><br/>
+                                                  }
+                                              }
+                                              @(marker.Days.Count() > 7 ? "..." : string.Empty)
+                                          </p>
                                           <p><b>Book:</b> @marker.Singing.Book</p>
                                           <p><b>Info:</b> @Html.Raw(marker.Singing.Info)</p>
                                           <p><b>Location:</b> @marker.Singing.Location</p>
