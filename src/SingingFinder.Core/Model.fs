@@ -1,6 +1,7 @@
 ﻿namespace SingingFinder.Core
 
 type Month =
+    | All=0
     | January=1
     | February=2
     | March=3
@@ -51,7 +52,7 @@ type Days =
 
 type Event =
   { Singing: Singing;
-    Days: Days }
+    Days: Days list }
 
 type SingingDays = 
     | Sunday

@@ -9,9 +9,9 @@ type SingingDay =
     | DayOfMonth of int                    
     // Every Monday                 -> Monday
     | Every of DayOfWeek
-    // 1st Monday                   -> [First] * Monday
-    // 2nd and 4th Tuesday          -> [Second, Fourth] * Tuesday
-    | Regularly of Cardinality list * DayOfWeek
+    // 1st Monday                   -> [First] * Monday * [Monday]
+    // 2nd and 4th Tuesday          -> [Second, Fourth] * Tuesday * [Tuesday]
+    | Regular of Cardinality list * DayOfWeek
     // Fri and Sat before 2nd Sun   -> Second * Sunday * [Friday, Saturday]
     // 2nd Sun and Sat Before       -> Second * Sunday * [Saturday, Sunday]
     // Sat before 2nd Tuesday       -> Second * Tuesday * [Saturday]

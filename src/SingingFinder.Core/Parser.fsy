@@ -44,6 +44,6 @@ AndDaysBefore:
 SingingDay:	
 | INT										{ DayOfMonth ($1) }
 | EVERY Day									{ Every ($2) }
-| CardinalityList Day						{ Regularly (List.rev($1),$2) }
+| CardinalityList Day						{ Regular (List.rev($1),$2) }
 | CardinalityList Day AND DayList BEFORE	{ OnOrBefore (List.rev($1),$2,List.rev($4) @ [$2]) }
 | DayList BEFORE CardinalityList Day		{ OnOrBefore (List.rev($3),$4,List.rev($1)) }

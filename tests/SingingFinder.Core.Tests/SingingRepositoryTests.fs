@@ -7,6 +7,7 @@ module SingingCacheTests=
     open SingingFinder.Core
     open SingingRepository
 
+    (*
     [<Test>]
     [<Category "integration">]
     let ``singings are cached``()=
@@ -24,6 +25,7 @@ module SingingCacheTests=
         System.Threading.Thread.Sleep(5)
 
         test <@ timeToFetch() > 100L @>
+    *)
   
 module SingingRepositoryTests=
 

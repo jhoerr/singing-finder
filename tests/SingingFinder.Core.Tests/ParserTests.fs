@@ -27,23 +27,23 @@ module ParserTests=
 
     [<Test>]
     let ``first sunday``()=
-        test <@ "first sunday" |> parse = Regularly([First], DayOfWeek.Sunday) @>
+        test <@ "first sunday" |> parse = Regular([First], DayOfWeek.Sunday) @>
 
     [<Test>]
     let ``1st sunday``()=
-        test <@ "1st sunday" |> parse = Regularly([First], DayOfWeek.Sunday) @>
+        test <@ "1st sunday" |> parse = Regular([First], DayOfWeek.Sunday) @>
 
     [<Test>]
     let ``first and third monday``()=
-        test <@ "first and third monday" |> parse = Regularly([First; Third], DayOfWeek.Monday) @>
+        test <@ "first and third monday" |> parse = Regular([First; Third], DayOfWeek.Monday) @>
 
     [<Test>]
     let ``fiRST AnD THIRD monday``()=
-        test <@ "fiRST AnD THIRD monday" |> parse = Regularly([First; Third], DayOfWeek.Monday) @>
+        test <@ "fiRST AnD THIRD monday" |> parse = Regular([First; Third], DayOfWeek.Monday) @>
 
     [<Test>]
     let ``first and third mondays``()=
-        test <@ "first and third mondays" |> parse = Regularly([First; Third], DayOfWeek.Monday) @>
+        test <@ "first and third mondays" |> parse = Regular([First; Third], DayOfWeek.Monday) @>
 
     [<Test>]
     let ``first sunday and saturday before``()=
