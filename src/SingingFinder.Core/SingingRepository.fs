@@ -7,15 +7,19 @@ module SingingRepository =
     open Date
 
     // get all singings with a valid location
-    let singings() =
+    let getSingings() =
         getRecords()
+        
+    let filterSingingsInRange (startDate:DateTime) (endDate:DateTime) (book:Book) (singingType:SingingType) rangeInMiles singings =
+        singings
         |> List.filter (fun s -> (s.Latitude,s.Longitude) <> (0.0,0.0))
-
-    // get all singings for the selected date range and book type
-    let singingsInRange (startDate:DateTime) (endDate:DateTime) (book:Book) (singingType:SingingType) rangeInMiles = 
-        singings() 
-        |> List.filter (fun s -> book = Book.All || s.Book.HasFlag(book))
+        |> List.filter (fun s -> book = Book.All || int (s.Book &&& book) <> 0)
         |> List.filter (fun s -> singingType = SingingType.All || s.Type = singingType)
         |> singingsWithinDateRange {Start=startDate; End=endDate}
+
+    // get all singings for the selected date range and book type
+    let getSingingsInRange (startDate:DateTime) (endDate:DateTime) (book:Book) (singingType:SingingType) rangeInMiles = 
+        getSingings()
+        |> filterSingingsInRange startDate endDate book singingType rangeInMiles
 
 

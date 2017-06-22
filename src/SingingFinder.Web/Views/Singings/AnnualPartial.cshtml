@@ -1,11 +1,5 @@
 ﻿@model IEnumerable<SingingFinder.Core.Event>
 
-@{
-    ViewBag.Title = "Annual Singings";
-}
-
-<h1>Annual Singings</h1>
-
 @foreach (var group in Model.OrderBy(m => m.Singing.Month).GroupBy(m => m.Singing.Month))
 {
     <h2>@group.Key</h2>
@@ -20,8 +14,9 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var e in group.OrderBy(e => e.Days.Start))
+        @foreach (var e in group.OrderBy(e => e.Days.First().Start))
         {
+            var date = e.Days.First();
             <tr>
                 <td>@e.Singing.Day</td>
                 <td>
@@ -41,13 +36,13 @@
                 </td>
 
              
-                @if (e.Days.Start == e.Days.End)
+                @if (date.Start == date.End)
                 {
-                    <td>@e.Days.Start.ToString("ddd, dd MMM yyyy")</td>
+                    <td>@date.Start.ToString("ddd, dd MMM yyyy")</td>
                 }
                 else
                 {
-                    <td>@e.Days.Start.ToString("ddd, dd MMM yyyy") - @e.Days.End.ToString("ddd, dd MMM yyyy")</td>
+                    <td>@date.Start.ToString("ddd, dd MMM yyyy") - @date.End.ToString("ddd, dd MMM yyyy")</td>
                 }
                 <td>@e.Singing.Book</td>
                 <td>@e.Singing.Location; @(string.IsNullOrWhiteSpace(e.Singing.Info) ? string.Empty : "Info: " + e.Singing.Info)</td>
@@ -57,4 +52,3 @@
         </tbody>
     </table>
 }
-

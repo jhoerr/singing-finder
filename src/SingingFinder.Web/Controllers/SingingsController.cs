@@ -16,11 +16,14 @@ namespace SingingFinder.Web.Controllers
         public ActionResult Map(DateTime? start = null, DateTime? end = null, Book book = Book.All, SingingType singingType = SingingType.All)
             => PartialView("MapPartial", new SingingsViewModel(Singings(start, end, book, singingType), ResolveStart(start), ResolveEnd(end), book, singingType));
 
-        public ActionResult Annual()
-            => View(Singings(null, null, Book.All, SingingType.Annual));
+        public ActionResult AnnualFourShape()
+            => View(Singings(null, null, (Book)Enum.Parse(typeof(Book),"Four-Shape"), SingingType.Annual));
+
+        public ActionResult AnnualSevenShape()
+            => View(Singings(null, null, (Book)Enum.Parse(typeof(Book), "Seven-Shape"), SingingType.Annual));
 
         private IEnumerable<Event> Singings(DateTime? start = null, DateTime? end = null, Book book = Book.All, SingingType singingType = SingingType.All) 
-            => SingingRepository.singingsInRange(ResolveStart(start), ResolveEnd(end), book, singingType, 0);
+            => SingingRepository.getSingingsInRange(ResolveStart(start), ResolveEnd(end), book, singingType, 0);
 
         private static DateTime ResolveStart(DateTime? start)
             => start ?? DateTime.Today;

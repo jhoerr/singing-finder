@@ -19,22 +19,25 @@ type Month =
 
 [<System.FlagsAttribute>]
 type Book =
-    | ``All``                   =0
-    | ``1991 Edition``          =1
-    | ``Cooper Edition``        =2
-    | ``Shenandoah Harmony``    =4
-    | ``Georgian Harmony``      =8
-    | ``Christian Harmony``     =16
-    | ``Missouri Harmony``      =32
-    | ``Southern Harmony``      =64
-    | ``Eclectic Harmony``      =128
-    | ``JL White Edition``      =256
-    | ``New Compositions``      =512
-    | ``Colored Sacred Harp``   =1024
-    | ``Social Harp``           =2048
-    | ``American Vocalist``     =4096
-    | ``Harmonia Sacra``        =8192
-    | ``New Harp of Columbia``  =16384
+    | ``All``                   =0b000000000000000000000000
+    | ``1991 Edition``          =0b000000000000000000000001
+    | ``Cooper Edition``        =0b000000000000000000000010
+    | ``Shenandoah Harmony``    =0b000000000000000000000100
+    | ``Georgian Harmony``      =0b000000000000000000001000
+    | ``Christian Harmony``     =0b000000000000000000010000
+    | ``Missouri Harmony``      =0b000000000000000000100000
+    | ``Southern Harmony``      =0b000000000000000001000000
+    | ``Eclectic Harmony``      =0b000000000000000010000000
+    | ``JL White Edition``      =0b000000000000000100000000
+    | ``New Compositions``      =0b000000000000001000000000
+    | ``Colored Sacred Harp``   =0b000000000000010000000000
+    | ``Social Harp``           =0b000000000000100000000000
+    | ``American Vocalist``     =0b000000000001000000000000
+    | ``Harmonia Sacra``        =0b000000000010000000000000
+    | ``New Harp of Columbia``  =0b000000000100000000000000
+    // 
+    | ``Four-Shape``            =0b000000000001111111101111
+    | ``Seven-Shape``           =0b000000000110000000010000
 
 type SingingType =
     | All=0
