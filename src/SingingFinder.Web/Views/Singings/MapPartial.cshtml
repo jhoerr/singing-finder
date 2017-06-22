@@ -37,7 +37,7 @@
               factory.Add()
                   .Latitude(marker.Singing.Latitude)
                   .Longitude(marker.Singing.Longitude)
-                  .Title(marker.Singing.Name)
+                  .Title(string.Format("{0} ({1})", marker.Singing.Name, marker.Singing.Book))  
                   .Icon((marker.Singing.Type.Equals(SingingType.Annual) ? "~/Content/Images/marker_redA.png" : "~/Content/Images/marker_greyR.png"), new Size(44,48))
                   .Window(window =>
                       window.Add()

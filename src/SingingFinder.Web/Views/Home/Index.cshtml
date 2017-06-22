@@ -20,10 +20,28 @@
         <div class="form-group">
             <label for="book">Book:</label>
             <select class="form-control" id="book" name="book">
-                @foreach (var book in Enum.GetValues(typeof(Book)).Cast<Book>())
-                {
-                    <option value="@book">@book</option>
-                }
+                <option value="All">Any Book</option>
+                <option value="Four-Shape">Any Four-Shape Book</option>
+                <option value="Seven-Shape">Any Seven-Shape Book</option>
+                <optgroup label="Four-Shape Books">
+                    <option value="1991 Edition">1991 Edition</option>
+                    <option value="Cooper Edition">Cooper Edition</option>
+                    <option value="Shenandoah Harmony">Shenandoah Harmony</option>
+                    <option value="Georgian Harmony">Georgian Harmony</option>
+                    <option value="Missouri Harmony">Missouri Harmony</option>
+                    <option value="Southern Harmony">Southern Harmony</option>
+                    <option value="Eclectic Harmony">Eclectic Harmony</option>
+                    <option value="JL White Edition">JL White Edition</option>
+                    <option value="New Compositions">New Compositions</option>
+                    <option value="Colored Sacred Harp">Colored Sacred Harp</option>
+                    <option value="Social Harp">Social Harp</option>
+                    <option value="American Vocalist">American Vocalist</option>
+                </optgroup>
+                <optgroup label="Seven-Shape Books">
+                    <option value="Christian Harmony">Christian Harmony</option>
+                    <option value="Harmonia Sacra">Harmonia Sacra</option>
+                    <option value="New Harp of Columbia">New Harp of Columbia</option>
+                </optgroup>
             </select>
         </div>
     </div>
@@ -31,7 +49,7 @@
         <div class="form-group">
             <label for="singingType">Type:</label>
             <select class="form-control" id="singingType" name="singingType">
-                <option value="All">All</option>
+                <option value="All">Any Type</option>
                 <option value="Annual">Annual (All-Day)</option>
                 <option value="Regular">Regular (Local)</option>
             </select>
