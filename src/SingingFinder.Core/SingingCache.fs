@@ -1,6 +1,7 @@
 ﻿namespace SingingFinder.Core
 
 open FSharp.Data
+open Microsoft.Azure
 
 type SingingRecord = CsvProvider<"./singings.csv", Schema="SingingType,Month,string,,,,,Book,float,float,">
 
@@ -29,7 +30,7 @@ module SingingCache=
     let fetchRows() =
         let rows = 
             SingingRecord
-                .Load("https://docs.google.com/spreadsheets/d/1tmXoq1M3ffogumdg07xclv0_0DBZFxTH_LVw3_rvCA8/export?format=csv")
+                .Load(CloudConfigurationManager.GetSetting("SingingData.Url"))
                 .Rows
             |> Seq.map toDomainSinging
             |> Seq.toList
