@@ -20,20 +20,21 @@ type Month =
 [<System.FlagsAttribute>]
 type Book =
     | ``All``                   =0
-    | ``Denson``                =1
-    | ``Cooper``                =2
+    | ``1991 Edition``          =1
+    | ``Cooper Edition``        =2
     | ``Shenandoah Harmony``    =4
     | ``Georgian Harmony``      =8
     | ``Christian Harmony``     =16
     | ``Missouri Harmony``      =32
     | ``Southern Harmony``      =64
     | ``Eclectic Harmony``      =128
-    | ``JL White``              =256
+    | ``JL White Edition``      =256
     | ``New Compositions``      =512
     | ``Colored Sacred Harp``   =1024
     | ``Social Harp``           =2048
     | ``American Vocalist``     =4096
     | ``Harmonia Sacra``        =8192
+    | ``New Harp of Columbia``  =16384
 
 
 type Singing = 
