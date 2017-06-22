@@ -20,13 +20,24 @@
         <div class="form-group">
             <label for="book">Book:</label>
             <select class="form-control" id="book" name="book">
-            @foreach (var book in Enum.GetValues(typeof(Book)).Cast<Book>())
-            {
-                <option value="@book">@book</option>
-            }
+                @foreach (var book in Enum.GetValues(typeof(Book)).Cast<Book>())
+                {
+                    <option value="@book">@book</option>
+                }
             </select>
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="singingType">Type:</label>
+            <select class="form-control" id="singingType" name="singingType">
+                <option value="All">All</option>
+                <option value="Annual">Annual (All-Day)</option>
+                <option value="Regular">Regular (Local)</option>
+            </select>
+        </div>
+    </div>
+
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -60,17 +71,15 @@
 
         function updateMap() {
             var datepicker = $('#daterange').data('daterangepicker');
-            var start = datepicker.startDate;
-            var end = datepicker.endDate;
-            var book = $('#book').val();
 
             new $.jmelosegui.GoogleMap('#mapContainer').ajax({
                 url: '@Url.Action("Map", "Singings")',
                 type: "Get",
                 data: {
-                    start: start.format('L'),
-                    end: end.format('L'),
-                    book: book
+                    start: datepicker.startDate.format('L'),
+                    end: datepicker.endDate.format('L'),
+                    book: $('#book').val(),
+                    singingType: $('#singingType').val()
                 },
                 success: function(data) {
                 }
@@ -102,6 +111,11 @@
                 });
 
             $('#book').change(
+                function(parameters) {
+                    updateMap();
+                });
+
+            $('#singingType').change(
                 function(parameters) {
                     updateMap();
                 });

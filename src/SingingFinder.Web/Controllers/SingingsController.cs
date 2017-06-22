@@ -10,17 +10,17 @@ namespace SingingFinder.Web.Controllers
     public class SingingsController : Controller
     {
         // GET: Singings
-        public ActionResult Index(DateTime? start = null, DateTime? end = null, Book book = Book.All) 
-            => Json(Singings(start, end, book), JsonRequestBehavior.AllowGet);
+        public ActionResult Index(DateTime? start = null, DateTime? end = null, Book book = Book.All, SingingType singingType = SingingType.All) 
+            => Json(Singings(start, end, book, singingType), JsonRequestBehavior.AllowGet);
 
-        public ActionResult Map(DateTime? start = null, DateTime? end = null, Book book = Book.All)
-            => PartialView("MapPartial", new SingingsViewModel(Singings(start, end, book), ResolveStart(start), ResolveEnd(end), book));
+        public ActionResult Map(DateTime? start = null, DateTime? end = null, Book book = Book.All, SingingType singingType = SingingType.All)
+            => PartialView("MapPartial", new SingingsViewModel(Singings(start, end, book, singingType), ResolveStart(start), ResolveEnd(end), book, singingType));
 
         public ActionResult Annual()
-            => View(Singings());
+            => View(Singings(null, null, Book.All, SingingType.Annual));
 
-        private IEnumerable<Event> Singings(DateTime? start = null, DateTime? end = null, Book book = Book.All) 
-            => SingingRepository.singingsInRange(ResolveStart(start), ResolveEnd(end), book, 0);
+        private IEnumerable<Event> Singings(DateTime? start = null, DateTime? end = null, Book book = Book.All, SingingType singingType = SingingType.All) 
+            => SingingRepository.singingsInRange(ResolveStart(start), ResolveEnd(end), book, singingType, 0);
 
         private static DateTime ResolveStart(DateTime? start)
             => start ?? DateTime.Today;

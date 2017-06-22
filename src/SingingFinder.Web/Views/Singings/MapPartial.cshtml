@@ -22,12 +22,13 @@
 
     var count = Model.Events.Count();
     var bookClause = Model.Book == Book.All ? string.Empty : Model.Book + " ";
+    var typeClause = Model.SingingType == SingingType.All ? string.Empty : Model.SingingType.ToString().ToLowerInvariant() + " ";
     var isAreClause = count == 1 ? "is" : "are";
     var countClause = count == 0 ? "no" : count.ToString();
     var singingClause = count == 1 ? "singing" : "singings";
 }
 
-<p>There @(isAreClause) @(countClause) @(bookClause)@(singingClause) between @Model.Start.ToString("ddd, MMM dd yyyy") and @Model.End.ToString("ddd, MMM dd yyyy").</p>
+<p>There @(isAreClause) @(countClause) @(typeClause)@(bookClause)@(singingClause) between @Model.Start.ToString("ddd, MMM dd yyyy") and @Model.End.ToString("ddd, MMM dd yyyy").</p>
 
 @(Html.GoogleMap()
       .ApiKey(CloudConfigurationManager.GetSetting("GoogleMaps.ApiKey"))

@@ -37,6 +37,7 @@ type Book =
     | ``New Harp of Columbia``  =16384
 
 type SingingType =
+    | All=0
     | Annual=1
     | Regular=2
 
