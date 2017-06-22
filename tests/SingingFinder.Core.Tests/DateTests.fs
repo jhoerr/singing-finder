@@ -9,7 +9,7 @@ module DateTests=
 
     open Date
 
-    let defaultSinging = {Month=Month.January; Day="1"; Name=""; SingingUrl=""; Location=""; Info=""; Latitude=0.0; Longitude=0.0; LocationUrl=""; Book=Book.Denson}
+    let defaultSinging = {Month=Month.January; Day="1"; Name=""; SingingUrl=""; Location=""; Info=""; Latitude=0.0; Longitude=0.0; LocationUrl=""; Book=Book.``1991 Edition``; Type=SingingType.Annual }
 
     let printAndReturn result =
         printfn "%s" (result.ToString())

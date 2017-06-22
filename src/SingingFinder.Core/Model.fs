@@ -36,6 +36,9 @@ type Book =
     | ``Harmonia Sacra``        =8192
     | ``New Harp of Columbia``  =16384
 
+type SingingType =
+    | Annual=1
+    | Regular=2
 
 type Singing = 
   { Month:Month; 
@@ -47,7 +50,8 @@ type Singing =
     Info: string;
     SingingUrl: string;
     LocationUrl: string;
-    Book: Book }
+    Book: Book;
+    Type: SingingType }
 
 type Days = 
   { Start: System.DateTime; 

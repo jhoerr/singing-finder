@@ -2,7 +2,7 @@
 
 open FSharp.Data
 
-type SingingRecord = CsvProvider<"./singings.csv", Schema="Month,string,,,,,Book,float,float,">
+type SingingRecord = CsvProvider<"./singings.csv", Schema="SingingType,Month,string,,,,,Book,float,float,">
 
 module SingingCache=
 
@@ -22,13 +22,14 @@ module SingingCache=
         Book=System.Enum.Parse(typeof<Book>,r.Book) :?> Book;
         Latitude=r.Latitude;
         Longitude=r.Longitude;
-        LocationUrl=r.LocationUrl; }
+        LocationUrl=r.LocationUrl;
+        Type=System.Enum.Parse(typeof<SingingType>,r.SingingType) :?> SingingType}
 
     // fetch singing records from the data source, convert them to domain records, and cache the result.
     let fetchRows() =
         let rows = 
             SingingRecord
-                .Load("https://docs.google.com/spreadsheets/d/1fVm-niiqMko4eFa2P1sBHLlofLOsmiqkylYYbKaIuXw/export?format=csv")
+                .Load("https://docs.google.com/spreadsheets/d/1tmXoq1M3ffogumdg07xclv0_0DBZFxTH_LVw3_rvCA8/export?format=csv")
                 .Rows
             |> Seq.map toDomainSinging
             |> Seq.toList

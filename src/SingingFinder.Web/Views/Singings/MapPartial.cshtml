@@ -1,4 +1,5 @@
-﻿@using Jmelosegui.Mvc.GoogleMap
+﻿@using System.Drawing
+@using Jmelosegui.Mvc.GoogleMap
 @using Microsoft.Azure
 @using SingingFinder.Core
 @using WebGrease.Css.Extensions
@@ -43,10 +44,11 @@
                   .Latitude(marker.Singing.Latitude)
                   .Longitude(marker.Singing.Longitude)
                   .Title(marker.Singing.Name)
+                  .Icon((marker.Singing.Type.Equals(SingingType.Annual) ? "~/Content/Images/marker_redA.png" : "~/Content/Images/marker_greyR.png"), new Size(44,48))
                   .Window(window =>
                       window.Add()
                           .MaxWidth(600)
-                          .DisableAutoPan(false)
+                             .DisableAutoPan(false)
                           .Content(
                               @<text>
                                   <div>
