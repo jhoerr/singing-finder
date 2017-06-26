@@ -13,18 +13,25 @@ module SingingCache=
     let [<Literal>]cacheKey = "singing-data"
     let cache = createInMemoryCache (TimeSpan.FromMinutes(3.0))
 
+    let toDomainLocation (r:SingingRecord.Row) =
+      { Name=r.Location;
+        Address="";
+        City="";
+        StateProvince=""; 
+        Country="";
+        Latitude=r.Latitude;
+        Longitude=r.Longitude;
+        MapsUrl=r.LocationUrl; }
+
     let toDomainSinging (r:SingingRecord.Row) =
       { Month=System.Enum.Parse(typeof<Month>,r.Month) :?> Month;
         Day=r.Day;
         Name=r.Name;
         SingingUrl=r.SingingUrl;
-        Location=r.Location;
         Info=r.Info;
         Book=System.Enum.Parse(typeof<Book>,r.Book) :?> Book;
-        Latitude=r.Latitude;
-        Longitude=r.Longitude;
-        LocationUrl=r.LocationUrl;
-        Type=System.Enum.Parse(typeof<SingingType>,r.SingingType) :?> SingingType}
+        Type=System.Enum.Parse(typeof<SingingType>,r.SingingType) :?> SingingType
+        Location = toDomainLocation r }
 
     // fetch singing records from the data source, convert them to domain records, and cache the result.
     let fetchRows() =
