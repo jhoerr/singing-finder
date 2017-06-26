@@ -7,8 +7,8 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 }
 
-<h1>Sacred Harp Singing Finder</h1>
-<p class="lead">Find local and all-day singings near you!</p>
+@*<h1>Sacred Harp Singing Finder</h1>*@
+@*<p class="lead">Find local and all-day singings near you!</p>*@
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
@@ -91,7 +91,7 @@
             var datepicker = $('#daterange').data('daterangepicker');
 
             new $.jmelosegui.GoogleMap('#mapContainer').ajax({
-                url: '@Url.Action("Map", "Singings")',
+                url: '@Url.Action("Index", "Singings")',
                 type: "Get",
                 data: {
                     start: datepicker.startDate.format('L'),

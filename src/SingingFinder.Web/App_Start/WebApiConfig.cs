@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using Newtonsoft.Json;
+using SingingFinder.Web.Controllers.Converters;
 
 namespace SingingFinder.Web
 {
@@ -19,6 +21,12 @@ namespace SingingFinder.Web
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // Custom JSON converters
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new EventConverter() }
+            };
         }
     }
 }

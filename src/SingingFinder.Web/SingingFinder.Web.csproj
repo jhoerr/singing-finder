@@ -163,7 +163,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Attributes\CompressContentAttribute.cs" />
+    <Compile Include="Controllers\Converters\EventConverter.cs" />
+    <Compile Include="Controllers\Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Controllers\Extensions\FunctionalExtensions.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SingingsApiController.cs" />
     <Compile Include="Controllers\SingingsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
@@ -172,6 +176,8 @@
     </Compile>
     <Compile Include="Models\SingingsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ISingingService.cs" />
+    <Compile Include="Services\SingingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
