@@ -9,14 +9,14 @@ namespace SingingFinder.Web.Models
     {
         public SingingsViewModel(IEnumerable<Event> events, DateTime start, DateTime end, Book book, SingingType singingType)
         {
-            Events = events.GroupBy(e => e.Singing.Location);
+            Events = events;
             Start = start;
             End = end;
             Book = book;
             SingingType = singingType;
         }
             
-        public IEnumerable<IGrouping<Location, Event>> Events { get; }
+        public IEnumerable<Event> Events { get; }
         public DateTime Start { get; }
         public DateTime End { get; }
         public Book Book { get; }

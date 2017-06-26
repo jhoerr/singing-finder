@@ -3,7 +3,7 @@
 open FSharp.Data
 open Microsoft.Azure
 
-type SingingRecord = CsvProvider<"./singings.csv", Schema="SingingType,Month,string,,,,,Book,float,float,">
+type SingingRecord = CsvProvider<"./singings.csv", Schema="SingingType,Month,,,,,,,,,,,Book,float,float,">
 
 module SingingCache=
 
@@ -26,6 +26,7 @@ module SingingCache=
     let toDomainSinging (r:SingingRecord.Row) =
       { Month=System.Enum.Parse(typeof<Month>,r.Month) :?> Month;
         Day=r.Day;
+        Time=r.Time;
         Name=r.Name;
         SingingUrl=r.SingingUrl;
         Info=r.Info;

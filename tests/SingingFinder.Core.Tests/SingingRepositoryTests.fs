@@ -40,6 +40,7 @@ module SingingRepositoryTests=
     let def = 
       { Month=Month.January; 
         Day="1"; 
+        Time="";
         Name=""; 
         SingingUrl=""; 
         Info=""; 

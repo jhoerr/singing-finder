@@ -2,16 +2,17 @@
 @using Jmelosegui.Mvc.GoogleMap
 @using Microsoft.Azure
 @using SingingFinder.Core
+@using SingingFinder.Web.Models
 @using WebGrease.Css.Extensions
-@model SingingFinder.Web.Models.SingingsViewModel
+@model SingingsViewModel
 
 @{
 
     var cookie = Request.Cookies["myMapCookie"];
     var value = cookie == null ? "" : cookie.Value ?? "";
-    double lat = 42.2072;
-    double lng = -49.5601;
-    int zoom = 3; // default zoom
+    var lat = 42.2072;
+    var lng = -49.5601;
+    var zoom = 3; // default zoom
     var parts = value.Split('_');
     if (parts.Length == 3)
     {
@@ -19,6 +20,8 @@
         double.TryParse(parts[1], out lng);
         int.TryParse(parts[2], out zoom);
     }
+
+    var singingsByLocation = Model.Events.GroupBy(e => e.Singing.Location);
 }
 
 <p>@Model.Description()</p>
@@ -30,51 +33,96 @@
       .Zoom(zoom)
       .Center(center => center.Latitude(lat).Longitude(lng))
       .ClientEvents(events => events
-        .OnMapDragEnd("saveMapState")
-        .OnZoomChanged("saveMapState"))
+          .OnMapDragEnd("saveMapState")
+          .OnZoomChanged("saveMapState"))
       .Markers(factory =>
-          Model.Events.ForEach(marker =>
+          singingsByLocation.ForEach(location =>
               factory.Add()
-                  .Latitude(marker.Singing.Latitude)
-                  .Longitude(marker.Singing.Longitude)
-                  .Title(string.Format("{0} ({1})", marker.Singing.Name, marker.Singing.Book))  
-                  .Icon((marker.Singing.Type.Equals(SingingType.Annual) ? "~/Content/Images/marker_redA.png" : "~/Content/Images/marker_greyR.png"), new Size(22,40))
+                  .Latitude(location.Key.Latitude)
+                  .Longitude(location.Key.Longitude)
+                  .Title(location.Key.Name)
                   .Window(window =>
                       window.Add()
                           .MaxWidth(600)
-                             .DisableAutoPan(false)
+                          .DisableAutoPan(false)
                           .Content(
                               @<text>
+                                  @{
+                                      var annual = location.Where(s => s.Singing.Type == SingingType.Annual).OrderBy(s => s.Days.First().Start).ToList();
+                                      var regular = location.Where(s => s.Singing.Type == SingingType.Regular).ToList();
+                                      var regularDays = regular.SelectMany(r => r.Days).Select(d => d.Start).OrderBy(s => s).Distinct().ToList();
+                                  }
                                   <div>
-                                      @if (string.IsNullOrWhiteSpace(marker.Singing.SingingUrl))
-                                      {
-                                          <h2>@marker.Singing.Name</h2>
-                                      }
-                                      else
-                                      {
-                                        <h2><a href="@marker.Singing.SingingUrl" target="_blank">@marker.Singing.Name</a></h2>
-                                      }
+                                      <h2><a href="@location.Key.MapsUrl" target="_blank">@location.Key.Name</a></h2>
                                       <div id="bodyContent">
-                                          <p><em>@marker.Singing.Day</em></p>
-                                          <p>
-                                              @foreach (var days in marker.Days.Take(7))
+                                          @* Annual Singings *@
+                                          @if (annual.Any())
+                                          {
+                                              <h3>Annual Singings</h3>
+                                              foreach (var e in annual)
                                               {
-                                                  if (days.Start == days.End)
+                                                  var start = e.Days.First().Start;
+                                                  var end = e.Days.First().End;
+
+                                                  if (start == end)
                                                   {
-                                                      <b>@days.Start.ToString("ddd, MMM dd yyyy")</b><br/>
+                                                      <h4>@start.ToString("ddd, MMM dd yyyy")</h4>
                                                   }
                                                   else
                                                   {
-                                                      <b>@days.Start.ToString("ddd, MMM dd yyyy") - @days.End.ToString("ddd, MMM dd yyyy")</b><br/>
+                                                      <h4>@start.ToString("ddd, MMM dd yyyy") - @end.ToString("ddd, MMM dd yyyy")</h4>
                                                   }
+                                                  if (!string.IsNullOrWhiteSpace(e.Singing.Name))
+                                                  {
+                                                      <p>@e.Singing.Name</p>
+                                                  }
+                                                  <p>@e.Singing.Day in @e.Singing.Month</p>
+                                                  if (!string.IsNullOrWhiteSpace(e.Singing.Time))
+                                                  {
+                                                      <p><b>Time:</b> @e.Singing.Time</p>
+                                                  }
+                                                  <p><b>Book:</b> @e.Singing.Book</p>
+                                                  <p><b>Info:</b> @Html.Raw(e.Singing.Info)</p>
                                               }
-                                              @(marker.Days.Count() > 7 ? "..." : string.Empty)
-                                          </p>
-                                          <p><b>Book:</b> @marker.Singing.Book</p>
-                                          <p><b>Info:</b> @Html.Raw(marker.Singing.Info)</p>
-                                          <p><b>Location:</b> @marker.Singing.Location</p>
-                                          <p><a href="@Html.Raw(marker.Singing.LocationUrl)" target="_blank">Get Directions in Google Maps</a>
-                                          </p>
+                                          }
+
+                                          @* Local Singings *@
+                                          @if (regular.Any())
+                                          {
+                                              <h3>Regular (Local) Singings</h3>
+                                              foreach (var e in regular.OrderBy(s => s.Days.First().Start))
+                                              {
+
+                                                  <h4>@e.Singing.Day</h4>
+                                                   if (!string.IsNullOrWhiteSpace(e.Singing.Time))
+                                                   {
+                                                       <p><b>Time:</b> @e.Singing.Time</p>
+                                                   }
+                                                  <p><b>Book:</b> @e.Singing.Book</p>
+                                                  <p><b>Info:</b> @Html.Raw(e.Singing.Info)</p>
+                                                  <p>
+                                                      @foreach (var day in e.Days.Take(3))
+                                                      {
+                                                          @(day.Start.ToString("ddd, MMM dd yyyy"))
+                                                          <br/>
+                                                      }
+
+                                                      @if (e.Days.Count() > 3)
+                                                      {
+                                                          <a data-toggle="collapse" data-target="#demo">Show More...</a>
+                                                          <div id="demo" class="collapse">
+                                                              @foreach (var day in e.Days.Skip(3))
+                                                              {
+                                                                  @(day.Start.ToString("ddd, MMM dd yyyy"))
+                                                                  <br/>
+                                                              }
+                                                          </div>
+                                                      }
+                                                  </p>
+                                              }
+                                          }
+
+
                                       </div>
                                   </div>
                                </text>

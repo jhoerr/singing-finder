@@ -12,6 +12,7 @@ module DateTests=
     let defaultSinging = 
       { Month=Month.January; 
         Day="1"; 
+        Time="";
         Name=""; 
         SingingUrl=""; 
         Info=""; 

@@ -57,6 +57,7 @@ type Location =
 type Singing = 
   { Month:Month; 
     Day:string; 
+    Time:string;
     Name:string; 
     Location: Location; 
     Info: string;
