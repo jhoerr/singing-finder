@@ -52,12 +52,12 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <Import Project="..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets" Condition="Exists('..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets')" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
     <None Include="singings.csv" />
+    <Compile Include="Converter.fs" />
     <Compile Include="Model.fs" />
     <None Include="Parser.fsy" />
     <FsYacc Include="Parser.fsy">
@@ -78,12 +78,15 @@
       <HintPath>..\..\packages\FSharp.Data.2.3.3\lib\net40\FSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="FsLexYacc.Runtime">
-      <HintPath>..\..\packages\FsLexYacc.Runtime.7.0.5\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10\FsLexYacc.Runtime.dll</HintPath>
+      <HintPath>..\..\packages\FsLexYacc.Runtime.7.0.6\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10\FsLexYacc.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration">
       <HintPath>..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -93,11 +96,12 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <Import Project="..\..\packages\FsLexYacc.7.0.6\build\FsLexYacc.targets" Condition="Exists('..\..\packages\FsLexYacc.7.0.6\build\FsLexYacc.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\FsLexYacc.7.0.5\build\FsLexYacc.targets'))" />
+    <Error Condition="!Exists('..\..\packages\FsLexYacc.7.0.6\build\FsLexYacc.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\FsLexYacc.7.0.6\build\FsLexYacc.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

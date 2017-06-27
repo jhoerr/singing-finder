@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using SingingFinder.Web.App_Start;
 
 namespace SingingFinder.Web
 {
@@ -18,6 +19,7 @@ namespace SingingFinder.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            IocConfig.Configure();
         }
 
         protected void Application_BeginRequest()

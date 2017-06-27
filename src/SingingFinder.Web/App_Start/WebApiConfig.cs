@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net.Http.Headers;
 using System.Web.Http;
-using Newtonsoft.Json;
-using SingingFinder.Web.Controllers.Converters;
 
 namespace SingingFinder.Web
 {
@@ -22,11 +18,9 @@ namespace SingingFinder.Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            // Custom JSON converters
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Converters = new List<JsonConverter> { new EventConverter() }
-            };
-        }
+            // Default to JSON Serialization
+            config.Formatters.JsonFormatter.SupportedMediaTypes
+                .Add(new MediaTypeHeaderValue("text/html"));
+        }   
     }
 }
