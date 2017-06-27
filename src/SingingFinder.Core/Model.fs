@@ -1,7 +1,10 @@
 ﻿namespace SingingFinder.Core
 
 open System
+open Newtonsoft.Json
+open Newtonsoft.Json.Converters
 
+[<JsonConverter(typedefof<StringEnumConverter>)>]
 type Month =
     | All=0
     | January=1
@@ -18,6 +21,7 @@ type Month =
     | December=12
 
 [<System.FlagsAttribute>]
+[<JsonConverter(typedefof<FlagConverter>)>]
 type Book =
     | ``All``                   =0b000000000000000000000000
     | ``1991 Edition``          =0b000000000000000000000001
@@ -39,11 +43,14 @@ type Book =
     | ``Four-Shape``            =0b000000000001111111101111
     | ``Seven-Shape``           =0b000000000110000000010000
 
+[<JsonConverter(typedefof<StringEnumConverter>)>]
 type SingingType =
     | All=0
     | Annual=1
     | Regular=2
 
+[<CLIMutable>]
+[<JsonObject(MemberSerialization=MemberSerialization.OptOut)>]
 type Singing = 
   { Month:Month; 
     Day:string; 
@@ -57,10 +64,18 @@ type Singing =
     Book: Book;
     Type: SingingType }
 
+[<CLIMutable>]
+[<JsonObject(MemberSerialization=MemberSerialization.OptOut)>]
 type Days = 
-  { Start: System.DateTime; 
-    End: System.DateTime }
+  { 
+    [<JsonConverter(typedefof<DateConverter>)>]
+    Start: System.DateTime; 
+    [<JsonConverter(typedefof<DateConverter>)>]
+    End: System.DateTime 
+  }
 
+[<CLIMutable>]
+[<JsonObject(MemberSerialization=MemberSerialization.OptOut)>]
 type Event =
   { Singing: Singing;
     Days: Days list }
