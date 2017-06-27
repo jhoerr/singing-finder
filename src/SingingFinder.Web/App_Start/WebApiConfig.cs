@@ -22,9 +22,13 @@ namespace SingingFinder.Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            // Default to JSON Serialization
-            config.Formatters.JsonFormatter.SupportedMediaTypes
-                .Add(new MediaTypeHeaderValue("text/html"));
+            config.Formatters
+                .JsonFormatter.MediaTypeMappings
+                .Add(new RequestHeaderMapping("Accept",
+                    "text/html",
+                    StringComparison.InvariantCultureIgnoreCase,
+                    true,
+                    "application/json"));
 
             config.MessageHandlers
                 .Insert(0, new ServerCompressionHandler(new GZipCompressor(), new DeflateCompressor()));
