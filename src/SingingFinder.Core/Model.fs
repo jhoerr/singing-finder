@@ -51,16 +51,26 @@ type SingingType =
 
 [<CLIMutable>]
 [<JsonObject(MemberSerialization=MemberSerialization.OptOut)>]
+type Location =
+  { Name:string;
+    Address:string;
+    City:string;
+    StateProvince:string;
+    Country:string; 
+    Latitude: float;
+    Longitude: float;
+    MapsUrl: string; }
+
+[<CLIMutable>]
+[<JsonObject(MemberSerialization=MemberSerialization.OptOut)>]
 type Singing = 
   { Month:Month; 
     Day:string; 
+    Time:string;
     Name:string; 
-    Location: string; 
-    Latitude: float; 
-    Longitude: float; 
+    Location: Location; 
     Info: string;
     SingingUrl: string;
-    LocationUrl: string;
     Book: Book;
     Type: SingingType }
 

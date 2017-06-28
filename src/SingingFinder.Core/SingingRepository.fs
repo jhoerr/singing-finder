@@ -10,9 +10,9 @@ module SingingRepository =
     let getSingings() =
         getRecords()
         
-    let filterSingingsInRange (startDate:DateTime) (endDate:DateTime) (book:Book) (singingType:SingingType) rangeInMiles singings =
+    let filterSingingsInRange (startDate:DateTime) (endDate:DateTime) (book:Book) (singingType:SingingType) rangeInMiles singings=
         singings
-        |> List.filter (fun s -> (s.Latitude,s.Longitude) <> (0.0,0.0))
+        |> List.filter (fun s -> (s.Location.Latitude,s.Location.Longitude) <> (0.0,0.0))
         |> List.filter (fun s -> book = Book.All || int (s.Book &&& book) <> 0)
         |> List.filter (fun s -> singingType = SingingType.All || s.Type = singingType)
         |> singingsWithinDateRange {Start=startDate; End=endDate}

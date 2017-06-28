@@ -37,7 +37,24 @@ module SingingRepositoryTests=
 
     let day = DateTime(2017,1,1)
 
-    let def = {Month=Month.January; Day="1"; Name=""; SingingUrl=""; Location=""; Info=""; Latitude=1.0; Longitude=1.0; LocationUrl=""; Book=Book.All; Type=SingingType.Annual }
+    let def = 
+      { Month=Month.January; 
+        Day="1"; 
+        Time="";
+        Name=""; 
+        SingingUrl=""; 
+        Info=""; 
+        Book=Book.All; 
+        Type=SingingType.Annual; 
+        Location= { Name=""; 
+                    Address=""; 
+                    City=""; 
+                    StateProvince=""; 
+                    Country=""; 
+                    Latitude=0.0; 
+                    Longitude=0.0; 
+                    MapsUrl="";} }
+
     let red = {def with Book=Book.``1991 Edition``}
     let black = {def with Book=Book.``Christian Harmony``}
     let blueBlack = {def with Book=Book.``Cooper Edition`` ||| Book.``Christian Harmony``}
