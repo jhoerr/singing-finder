@@ -258,3 +258,11 @@ module DateTests=
         singings 
         |> singingsWithinDateRange {Start=DateTime.Parse(startDay); End=DateTime.Parse(endDay)}
         |> printAndReturn
+
+
+    [<TestCase((Book.``1991 Edition``))>]
+    [<TestCase((Book.``1991 Edition`` ||| Book.``Cooper Edition``))>]
+    [<TestCase((Book.``1991 Edition`` ||| Book.``Shenandoah Harmony``))>]
+    let ``book to int`` (book:Book) = 
+        printfn "%d: %A" (int book) book
+        
