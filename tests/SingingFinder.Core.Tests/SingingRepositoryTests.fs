@@ -1,32 +1,12 @@
 ﻿namespace SingingFinder.Core.Tests
 
-module SingingCacheTests=
+module DatabaseTests=
     open System
     open Swensen.Unquote
     open NUnit.Framework
     open SingingFinder.Core
     open SingingRepository
-    open SingingCache
-
-    (*
-    [<Test>]
-    [<Category "integration">]
-    let ``singings are cached``()=
-        let timeToFetch() = 
-            let stopWatch = System.Diagnostics.Stopwatch.StartNew()
-            let singings' = singings()
-            let elapsed = stopWatch.ElapsedMilliseconds
-            printfn "elapsed: %d ms" elapsed
-            elapsed
-
-        test <@ timeToFetch() > 100L @>
-        test <@ timeToFetch() < 10L @>
-        test <@ timeToFetch() < 10L @>
-        
-        System.Threading.Thread.Sleep(5)
-
-        test <@ timeToFetch() > 100L @>
-    *)
+    open Database
 
     let testDbConnection () =
         System.Reflection.Assembly.GetExecutingAssembly().CodeBase
@@ -34,15 +14,25 @@ module SingingCacheTests=
         |> (fun uri -> Uri.UnescapeDataString(uri.Path))
         |> System.IO.Path.GetDirectoryName
         |> (fun dir -> dir + "\\..\\..\\..\\..\\db\\minutes.db")
-        |> dbConnection
+        |> dbConnectionFromPath
 
     [<Test>]
-    let ``fetch rows from SQLite DB`` ()=
+    let ``simple query`` ()=
         use cn = testDbConnection()
         cn
-        |> fetchRows'
-        |> List.iter (fun r -> printfn "%s: %s" r.Name r.Location.Name)
+        |> dapperQueryWithConnection<Singing> "SELECT * FROM singings"
+        |> Seq.iter (fun r -> printfn "%s" r.Name)
 
+    [<Test>]
+    let ``complex query`` ()=
+        let apply s l = (s,l)
+        let query="""select s.name, l.id, l.name
+from singings s
+inner join locations l on s.location_id = l.id"""
+
+        testDbConnection()
+        |> dapperComplexQueryWithConnection<Singing,Location,Singing*Location> query apply
+        |> Seq.iter (fun (s,l) -> printfn "%s: %s" s.Name l.Name)
   
 module SingingRepositoryTests=
 
@@ -68,8 +58,8 @@ module SingingRepositoryTests=
                     City=""; 
                     StateProvince=""; 
                     Country=""; 
-                    Latitude=0.0; 
-                    Longitude=0.0; 
+                    Latitude=0.1; 
+                    Longitude=0.1; 
                     Url="";
                     PostalCode="";} }
 
@@ -79,14 +69,6 @@ module SingingRepositoryTests=
     let localRed = {def with Book=Book.``1991 Edition``; Type=SingingType.Regular}
     
     let singings = [red; black; blueBlack; localRed]
-
-    (*
-    [<Test>]
-    [<Category "integration">]
-    let ``fetch all singings``()=
-        getSingings()
-        |> List.iter (fun s -> printfn "%s (%A)" s.Name s.Book)
-    *)
 
     let filterTo book singingType singings =
         singings 
