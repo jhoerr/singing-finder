@@ -12,7 +12,7 @@ namespace SingingFinder.Web.Tests.Models
     public class SingingsViewModelTests
     {
         static readonly DateTime Day = new DateTime(2017, 1, 1);
-        static readonly Singing Singing = new Singing(Month.May, "day","","name", new Location("", "", "", "", "", 0.0, 0.0, ""), "info", "url", Book.All, SingingType.All);
+        static readonly Singing Singing = new Singing(Month.May, "day","","name", new Location("", "", "", "", "", "", 0.0, 0.0, ""), "info", "url", Book.All, SingingType.All);
         static readonly Event Event = new Event(Singing, new FSharpList<Days>(new Days(Day, Day), FSharpList<Days>.Empty));
 
         static readonly object[] TestCases =
@@ -30,8 +30,8 @@ namespace SingingFinder.Web.Tests.Models
         public void Description(SingingsViewModel model, string expected)
             => Assert.That(model.Description(), Is.EqualTo(expected));
 
-        private Location loc = new Location("loc", "", "", "", "", 0.0, 0.0, "");
-        private Location locprime = new Location("loc", "", "", "", "", 0.0, 0.0, ""); // different object, but structurally equal to 'loc'
+        private Location loc = new Location("loc", "", "", "", "","", 0.0, 0.0, "");
+        private Location locprime = new Location("loc", "", "", "", "", "", 0.0, 0.0, ""); // different object, but structurally equal to 'loc'
 
         [Test]
         public void StructuralEqualityRespected()

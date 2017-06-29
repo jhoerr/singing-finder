@@ -53,7 +53,7 @@
                                       var regularDays = regular.SelectMany(r => r.Days).Select(d => d.Start).OrderBy(s => s).Distinct().ToList();
                                   }
                                   <div>
-                                      <h2><a href="@location.Key.MapsUrl" target="_blank">@location.Key.Name</a></h2>
+                                      <h2><a href="https://www.google.com/maps/dir/Current+Location/@(location.Key.Latitude),@(location.Key.Longitude)" target="_blank">@location.Key.Name</a></h2>
                                       <div id="bodyContent">
                                           @* Annual Singings *@
                                           @if (annual.Any())

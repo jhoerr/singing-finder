@@ -56,10 +56,11 @@ type Location =
     Address:string;
     City:string;
     StateProvince:string;
+    PostalCode:string;
     Country:string; 
     Latitude: float;
     Longitude: float;
-    MapsUrl: string; }
+    Url: string; }
 
 [<CLIMutable>]
 [<JsonObject(MemberSerialization=MemberSerialization.OptOut)>]
@@ -70,7 +71,7 @@ type Singing =
     Name:string; 
     Location: Location; 
     Info: string;
-    SingingUrl: string;
+    Url: string;
     Book: Book;
     Type: SingingType }
 

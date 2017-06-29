@@ -14,7 +14,7 @@ module DateTests=
         Day="1"; 
         Time="";
         Name=""; 
-        SingingUrl=""; 
+        Url=""; 
         Info=""; 
         Book=Book.``1991 Edition``; 
         Type=SingingType.Annual; 
@@ -25,7 +25,8 @@ module DateTests=
                     Country=""; 
                     Latitude=0.0; 
                     Longitude=0.0; 
-                    MapsUrl="";} }
+                    Url="";
+                    PostalCode=""} }
 
     let printAndReturn result =
         printfn "%s" (result.ToString())

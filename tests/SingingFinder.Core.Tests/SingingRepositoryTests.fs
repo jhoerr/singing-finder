@@ -6,6 +6,7 @@ module SingingCacheTests=
     open NUnit.Framework
     open SingingFinder.Core
     open SingingRepository
+    open SingingCache
 
     (*
     [<Test>]
@@ -26,6 +27,22 @@ module SingingCacheTests=
 
         test <@ timeToFetch() > 100L @>
     *)
+
+    let testDbConnection () =
+        System.Reflection.Assembly.GetExecutingAssembly().CodeBase
+        |> UriBuilder
+        |> (fun uri -> Uri.UnescapeDataString(uri.Path))
+        |> System.IO.Path.GetDirectoryName
+        |> (fun dir -> dir + "\\..\\..\\..\\..\\db\\minutes.db")
+        |> dbConnection
+
+    [<Test>]
+    let ``fetch rows from SQLite DB`` ()=
+        use cn = testDbConnection()
+        cn
+        |> fetchRows'
+        |> List.iter (fun r -> printfn "%s: %s" r.Name r.Location.Name)
+
   
 module SingingRepositoryTests=
 
@@ -42,7 +59,7 @@ module SingingRepositoryTests=
         Day="1"; 
         Time="";
         Name=""; 
-        SingingUrl=""; 
+        Url=""; 
         Info=""; 
         Book=Book.All; 
         Type=SingingType.Annual; 
@@ -53,7 +70,8 @@ module SingingRepositoryTests=
                     Country=""; 
                     Latitude=0.0; 
                     Longitude=0.0; 
-                    MapsUrl="";} }
+                    Url="";
+                    PostalCode="";} }
 
     let red = {def with Book=Book.``1991 Edition``}
     let black = {def with Book=Book.``Christian Harmony``}
@@ -106,3 +124,5 @@ module SingingRepositoryTests=
     [<Test>]
     let ``filter to local singings (no results)``() =
         test <@  singings |> filterTo Book.``Cooper Edition`` SingingType.Regular = [] @>
+
+  

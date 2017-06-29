@@ -289,3 +289,4 @@ __pycache__/
 *.xsd.cs
 src/SingingFinder.Core/Parser.fsi
 src/SingingFinder.Core/Parser.fsyacc.output
+*.db-journal

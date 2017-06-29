@@ -1,45 +1,60 @@
 ﻿namespace SingingFinder.Core
 
-open FSharp.Data
 open Microsoft.Azure
-
-type SingingRecord = CsvProvider<"./singings.csv", Schema="SingingType,Month,string,,,,,Book,float,float,">
 
 module SingingCache=
 
     open System
     open FSharp.Data.Runtime.Caching
+    open System.Data.SQLite
+    open Dapper
 
     let [<Literal>]cacheKey = "singing-data"
     let cache = createInMemoryCache (TimeSpan.FromMinutes(3.0))
 
-    let toDomainSinging (r:SingingRecord.Row) =
-      { Month=System.Enum.Parse(typeof<Month>,r.Month) :?> Month;
-        Day=r.Day;
-        Name=r.Name;
-        SingingUrl=r.SingingUrl;
-        Location=r.Location;
-        Info=r.Info;
-        Book=System.Enum.Parse(typeof<Book>,r.Book) :?> Book;
-        Latitude=r.Latitude;
-        Longitude=r.Longitude;
-        LocationUrl=r.LocationUrl;
-        Type=System.Enum.Parse(typeof<SingingType>,r.SingingType) :?> SingingType}
+    let dbConnection path = 
+        let cn = new SQLiteConnection("DataSource="+path)
+        cn.Open()
+        cn
 
-    // fetch singing records from the data source, convert them to domain records, and cache the result.
-    let fetchRows() =
-        let rows = 
-            SingingRecord
-                .Load(CloudConfigurationManager.GetSetting("SingingData.Url"))
-                .Rows
-            |> Seq.map toDomainSinging
-            |> Seq.toList
+    let applyLocation s l =
+      { Name = s.Name;
+        Month = s.Month;
+        Book = s.Book;
+        Day = s.Day;
+        Time = s.Time;
+        Type = s.Type;
+        Info = s.Info;
+        Url = s.Url;
+        Location = l; }
+        
+    let fetchRows' (cn:SQLiteConnection) =
+        let query="""select 
+	s.name, s.url, s.month, s.day, s.book, s.singing_type as type, s.time, s.info,
+	l.id, l.name, l.url, l.address, l.city, l.county, l.state_province as stateProvince, l.postal_code as postalCode, l.country, l.gps_lat as latitude, l.gps_long as longitude
+from singings s
+inner join locations l on s.location_id = l.id"""
 
-        cache.Set (cacheKey,rows)
-        rows
+        let func = Func<Singing,Location,Singing> applyLocation
+        cn.Query<Singing,Location,Singing>(query, func)
+        |> Seq.toList
+    
+    let sqlLitePath =
+        let path = CloudConfigurationManager.GetSetting("SQLite.DB.Path")
+        if path = "CHANGEME"
+        then 
+            System.Reflection.Assembly.GetExecutingAssembly().CodeBase
+            |> UriBuilder
+            |> (fun uri -> Uri.UnescapeDataString(uri.Path))
+            |> System.IO.Path.GetDirectoryName
+            |> (fun dir -> dir + "\\..\\..\\..\\db\\minutes.db")
+        else path
 
     // get singing records from the cache, or fetch/cache them from the data source
     let getRecords() = 
         match cache.TryRetrieve cacheKey with 
         | Some(rows)    -> rows
-        | _             -> fetchRows()
+        | _             -> 
+            sqlLitePath
+            |> dbConnection
+            |> fetchRows'
