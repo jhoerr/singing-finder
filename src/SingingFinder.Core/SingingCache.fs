@@ -1,21 +1,13 @@
 ﻿namespace SingingFinder.Core
 
-open Microsoft.Azure
-
 module SingingCache=
 
     open System
     open FSharp.Data.Runtime.Caching
-    open System.Data.SQLite
-    open Dapper
+    open Database
 
     let [<Literal>]cacheKey = "singing-data"
     let cache = createInMemoryCache (TimeSpan.FromMinutes(3.0))
-
-    let dbConnection path = 
-        let cn = new SQLiteConnection("DataSource="+path)
-        cn.Open()
-        cn
 
     let applyLocation s l =
       { Name = s.Name;
@@ -28,36 +20,21 @@ module SingingCache=
         Url = s.Url;
         Location = l; }
         
-    let fetchRows' (cn:SQLiteConnection) =
+    let fetchRows =
         let query="""select 
 	s.name, s.url, s.month, s.day, s.book, s.singing_type as type, s.time, s.info,
 	l.id, l.name, l.url, l.address, l.city, l.county, l.state_province as stateProvince, l.postal_code as postalCode, l.country, l.gps_lat as latitude, l.gps_long as longitude
 from singings s
 inner join locations l on s.location_id = l.id"""
 
-        let func = Func<Singing,Location,Singing> applyLocation
         let rows = 
-            cn.Query<Singing,Location,Singing>(query, func)
+            dapperComplexQuery query applyLocation
             |> Seq.toList
         cache.Set(cacheKey, rows)
         rows
     
-    let sqlLitePath =
-        let path = CloudConfigurationManager.GetSetting("SQLite.DB.Path")
-        if path = "CHANGEME"
-        then 
-            System.Reflection.Assembly.GetExecutingAssembly().CodeBase
-            |> UriBuilder
-            |> (fun uri -> Uri.UnescapeDataString(uri.Path))
-            |> System.IO.Path.GetDirectoryName
-            |> (fun dir -> dir + "\\..\\..\\..\\db\\minutes.db")
-        else path
-
     // get singing records from the cache, or fetch/cache them from the data source
     let getRecords() = 
         match cache.TryRetrieve cacheKey with 
         | Some(rows)    -> rows
-        | _             -> 
-            sqlLitePath
-            |> dbConnection
-            |> fetchRows'
+        | _             -> fetchRows

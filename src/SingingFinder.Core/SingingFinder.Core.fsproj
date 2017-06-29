@@ -69,6 +69,7 @@
     </FsLex>
     <Compile Include="Lexer.fs" />
     <Compile Include="Date.fs" />
+    <Compile Include="Database.fs" />
     <Compile Include="SingingCache.fs" />
     <Compile Include="SingingRepository.fs" />
   </ItemGroup>
