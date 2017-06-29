@@ -36,8 +36,11 @@ from singings s
 inner join locations l on s.location_id = l.id"""
 
         let func = Func<Singing,Location,Singing> applyLocation
-        cn.Query<Singing,Location,Singing>(query, func)
-        |> Seq.toList
+        let rows = 
+            cn.Query<Singing,Location,Singing>(query, func)
+            |> Seq.toList
+        cache.Set(cacheKey, rows)
+        rows
     
     let sqlLitePath =
         let path = CloudConfigurationManager.GetSetting("SQLite.DB.Path")
