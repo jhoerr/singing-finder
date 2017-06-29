@@ -93,11 +93,7 @@
                                               foreach (var e in regular.OrderBy(s => s.Days.First().Start))
                                               {
 
-                                                  <h4>@e.Singing.Day</h4>
-                                                   if (!string.IsNullOrWhiteSpace(e.Singing.Time))
-                                                   {
-                                                       <p><b>Time:</b> @e.Singing.Time</p>
-                                                   }
+                                                  <h4>@e.Singing.Day@(string.IsNullOrWhiteSpace(e.Singing.Time) ? "" : ", " + e.Singing.Time)</h4>
                                                   <p><b>Book:</b> @e.Singing.Book</p>
                                                   <p><b>Info:</b> @Html.Raw(e.Singing.Info)</p>
                                                   <p>
