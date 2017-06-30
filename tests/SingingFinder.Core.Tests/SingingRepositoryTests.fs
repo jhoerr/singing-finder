@@ -28,7 +28,8 @@ module DatabaseTests=
         let apply s l = (s,l)
         let query="""select s.name, l.id, l.name
 from singings s
-inner join locations l on s.location_id = l.id"""
+inner join locations l on s.location_id = l.id
+where s.active == 1"""
 
         testDbConnection()
         |> dapperComplexQueryWithConnection<Singing,Location,Singing*Location> query apply

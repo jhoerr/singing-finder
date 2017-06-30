@@ -25,7 +25,8 @@ module SingingCache=
 	s.name, s.url, s.month, s.day, s.book, s.singing_type as type, s.time, s.info,
 	l.id, l.name, l.url, l.address, l.city, l.county, l.state_province as stateProvince, l.postal_code as postalCode, l.country, l.gps_lat as latitude, l.gps_long as longitude
 from singings s
-inner join locations l on s.location_id = l.id"""
+inner join locations l on s.location_id = l.id
+where s.active == 1"""
 
         let rows = 
             dapperComplexQuery query applyLocation
